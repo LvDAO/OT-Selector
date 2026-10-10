@@ -1,0 +1,3565 @@
+\documentclass[11pt,reqno]{amsart}
+\usepackage{amssymb,mathtools}
+\usepackage{enumitem}
+\usepackage{microtype}
+\usepackage{geometry}
+\geometry{}
+\usepackage[hidelinks]{hyperref}
+\let\affil\address
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+\numberwithin{equation}{section}
+
+\newcommand{\R}{\mathbb R}
+\newcommand{\E}{\mathbb E}
+\newcommand{\Pp}{\mathbb P}
+\newcommand{\cF}{\mathfrak F}
+\newcommand{\Lip}{\operatorname{Lip}}
+\newcommand{\sgn}{\operatorname{sgn}}
+
+\title[Empirical Wasserstein-One Matching]
+{Deterministic Selection in Empirical Wasserstein-One Matching}
+\author{Wentao Lyu}
+\affil{Shanghai Center for Mathematical Sciences,
+Fudan University}
+\subjclass[2020]{Primary 49Q22; Secondary 60D05, 60G55}
+\keywords{Optimal transport, empirical matching, Palm measures}
+\thanks{The Lean formalization is available at
+\url{https://github.com/LvDAO/OT-Selector}.}
+\date{}
+
+\begin{document}
+
+\begin{abstract}
+We match independent uniform samples from the squares \([0,1]^2\) and
+\([2,3]\times[0,1]\) by minimizing total Euclidean distance. The transport
+problem between the two uniform distributions has infinitely many optimal
+plans. We prove that, as the sample size grows, the empirical optimal plans
+converge weakly in probability to a single deterministic plan. This plan
+preserves height and has the same joint distribution of paired horizontal
+coordinates at every height. We prove convergence by establishing uniqueness
+of the stationary local matching obtained after rescaling and identifying
+the selected horizontal coupling from its source-Palm distribution.
+\end{abstract}
+
+\maketitle
+
+\section{Introduction}
+\label{sec:introduction}
+
+Optimal transport with the Euclidean distance cost can have many
+minimizers, even for compactly supported measures with densities. We ask
+whether independent sampling selects a definite transport plan. For samples
+from the uniform distributions on \([0,1]^2\) and
+\([2,3]\times[0,1]\), this question is listed as an open problem in the
+survey of del Barrio, Gonz\'alez-Sanz, Loubes, and
+Rodr\'iguez-V\'itores~\cite[Section~7, Problem~4]{delBarrioEtAl2025}.
+
+We prove that the optimal empirical matchings converge weakly in probability
+to a deterministic plan as the sample size grows. We characterize this plan
+through the source-Palm distribution of the unique stationary matching
+obtained at the scale of nearby sample points.
+
+\subsection{Model and main result}
+
+For each positive integer \(n\), let
+\[
+X_i=(U_i,T_i)\in[0,1]^2,\qquad
+Y_j=(2+V_j,S_j)\in[2,3]\times[0,1],
+\qquad 1\le i,j\le n,
+\]
+where the \(4n\) coordinates are independent and uniform on \([0,1]\).
+Let \(\sigma_n\) minimize
+\begin{equation}
+\frac1n\sum_{i=1}^n
+\sqrt{(2+V_{\sigma_n(i)}-U_i)^2+(S_{\sigma_n(i)}-T_i)^2}
+\label{eq:empirical-objective}
+\end{equation}
+over permutations of \(\{1,\ldots,n\}\). A fixed ordering of the
+permutations gives a measurable choice whenever there is a tie.
+In the coordinate order \((t,u,s,v)\), define
+\begin{equation}
+\pi_n:=\frac1n\sum_{i=1}^n
+\delta_{(T_i,U_i,S_{\sigma_n(i)},V_{\sigma_n(i)})}.
+\label{eq:empirical-plan}
+\end{equation}
+The physical transport plan is its pushforward by
+\((t,u,s,v)\mapsto((u,t),(2+v,s))\).
+For a coupling \(\kappa\) of two uniform \([0,1]\) laws, write
+\[
+\Pi_\kappa(dt,du,ds,dv):=dt\,\delta_t(ds)\,\kappa(du,dv).
+\]
+Thus \(\Pi_\kappa\) preserves height, and its paired horizontal marks
+have law \(\kappa\), independently of height.
+
+\begin{theorem}[Deterministic empirical selection]
+\label{thm:main-prove}
+There is a deterministic coupling \(\kappa_\infty\) of two uniform
+\([0,1]\) laws such that
+\begin{equation}
+\pi_n\xrightarrow{\Pp}\Pi_{\kappa_\infty}
+\quad\text{in the weak topology on probability measures on }[0,1]^4.
+\label{eq:main-selector}
+\end{equation}
+Equivalently, for every continuous \(F:[0,1]^4\to\R\),
+\[
+\frac1n\sum_{i=1}^n
+F(T_i,U_i,S_{\sigma_n(i)},V_{\sigma_n(i)})
+\xrightarrow{\Pp}
+\int_0^1\int_{[0,1]^2}F(t,u,t,v)\,\kappa_\infty(du,dv)\,dt.
+\]
+\end{theorem}
+
+The theorem uses the iid law at each sample size; samples of different
+sizes may have arbitrary dependence. The selected coupling is the
+source-Palm distribution of paired horizontal marks in the stationary
+microscopic matching. This is the joint law of the horizontal coordinates
+seen from a typical source point and its partner.
+
+We can describe all optimal plans for the limiting problem. For
+\(x=(u,t)\) and \(y=(2+v,s)\),
+\[
+|x-y|\ge 2+v-u,
+\]
+with equality precisely when \(s=t\). Every admissible continuum
+coupling integrates the right-hand side to \(2\), and a
+height-preserving coupling attains this value. Consequently the optimal
+plans are exactly
+\begin{equation}
+dt\,\delta_t(ds)\,\kappa_t(du,dv),
+\label{eq:optimal-face}
+\end{equation}
+where \(t\mapsto\kappa_t\) is a measurable family of couplings of two
+uniform laws, up to equality for almost every \(t\). This description
+follows by disintegrating over the common height. Theorem
+\ref{thm:main-prove} therefore identifies both a deterministic
+horizontal coupling and its constancy across macroscopic heights.
+
+\subsection{Selection and stationary matching}
+
+Secondary variational selection for the distance cost minimizes an
+additional energy over the continuum optimal set; its relationship with
+transport rays and variational asymptotic expansions is developed by
+Ambrosio and Pratelli~\cite{AmbrosioPratelli}. In our model, quadratic
+secondary selection is explicit: on the optimal set,
+\[
+\int |x-y|^2\,d\pi
+=4+\int (v-u)^2\,d\pi.
+\]
+It therefore selects the horizontal translation \(v=u\).
+The approximation scheme matters for selection. Gw\'{o}\'zd\'z~\cite{Gwozdz}
+constructs weakly convergent absolutely continuous marginals whose
+ray-monotone selectors converge to a different optimal plan from the
+selector of the limiting marginals. Our result establishes selection for the
+iid empirical approximation in \eqref{eq:empirical-objective}.
+
+The local matching problem connects the proof to invariant minimal
+matchings. Holroyd, Janson and W\"astlund~\cite{HolroydJansonWastlund}
+study point-process matchings that minimize cost under every finite
+rematching, including their uniqueness and translation-invariant
+realizations. Here the points carry horizontal marks, and a feedback
+change of coordinates gives a quadratic local cost. We prove uniqueness
+for stationary locally minimizing matchings with zero relative flux and
+finite source-Palm second moment in this environment.
+
+Optimal transport between stationary random measures provides another
+point of comparison. Huesmann~\cite{Huesmann} studies mean transport cost
+per unit volume and approximation by problems on bounded regions, with
+uniqueness for an absolutely continuous source. We also pass from finite
+problems to a stationary matching. For the atomic source measure in our
+setting, regeneration and stationary mass transport establish uniqueness
+within the locally minimizing class.
+
+The selection result also has a stochastic homogenization interpretation.
+The continuum cost determines the optimal set, while the rescaled sample
+geometry determines which plan is selected. Variational asymptotic
+expansions study this type of selection by resolving finer scales within
+a minimizing set~\cite{AmbrosioPratelli}.
+
+In the present proof, subtracting terms that depend only on a source or
+a target exposes a quadratic local cost. Optimality passes to the local
+matching limits, and their unique distribution of paired marks determines
+the transport plan at every macroscopic height.
+
+\subsection{Proof strategy}
+
+Fix an auxiliary parameter \(0<\lambda<1/8\). A predictable feedback
+graph compensates the source--target counting imbalance on the
+microscopic rank scale. Section~\ref{sec:feedback} constructs this
+graph and controls its current and a comparison matching.
+Section~\ref{sec:localization} transfers the comparison estimate to the
+exact Euclidean optimizer by a row--column cost gauge, obtaining a
+quadratic bound on feedback edge lengths.
+
+Section~\ref{sec:environment} identifies the stationary marked
+environment through its martingale problem. Section~\ref{sec:compactness}
+then shows that every selected local matching limit is perfect,
+locally minimizing, of zero relative flux, and has finite source-Palm
+second moment. Its source-Palm law means the law seen from a typical
+source event; the paired source and target marks give the candidate
+horizontal coupling.
+
+Sections~\ref{sec:kinetic} and~\ref{sec:regenerative-endgame} prove
+uniqueness of this stationary matching. A long zero-current hold,
+together with a deterministic energy iteration, produces a common
+empty cut in any joining of two candidate matchings. Stationary mass
+transport and the absence of finite alternating ties then force the
+matchings to coincide. Finally, Section~\ref{sec:reconstruction} uses
+vertical concentration and blockwise Palm readout to reconstruct
+\(\pi_n\) and prove Theorem~\ref{thm:main-prove}.
+
+The feedback graph is built at a fixed outer error tolerance
+\(\varepsilon>0\), and its estimates are derived before intersecting
+the required high-probability events. The limit
+\(\varepsilon\downarrow0\) is taken only after returning to the
+original empirical quantities. This order of limits is used throughout.
+
+\section{Finite feedback estimates}
+\label{sec:feedback}
+
+We construct a graph that keeps the source and target crossing counts
+close.  Matching the crossings in order will give a comparison matching
+with controlled squared edge lengths.
+
+Set
+\[
+a_i:=1-U_i\in[0,1],\qquad b_j:=1+V_j\in[1,2],\qquad
+D_{ij}:=a_i+b_j\in[1,3],
+\]
+and use the rank-scale phase lines
+\begin{equation}
+\widehat A_i(p):=nT_i+a_ip,\qquad
+\widehat B_j(p):=nS_j-b_jp.
+\label{eq:1.1}
+\end{equation}
+Fix once and for all
+\begin{equation}
+0<\lambda<\frac18,
+\qquad
+0<\eta<\frac{\lambda}{4(2+\lambda)}.
+\label{eq:1.2}
+\end{equation}
+
+\paragraph{Auxiliary graphs and outer limits.}
+For every \(\varepsilon>0\), choose a fixed \(A=A(\varepsilon)\), set
+\(B_n=A\sqrt n\), and construct the auxiliary graph
+\(g_{n,\varepsilon}\).  There is a good event
+\(\mathcal G_{n,\varepsilon}\) such that
+\begin{equation}
+\liminf_{n\to\infty}\Pp(\mathcal G_{n,\varepsilon})
+\ge 1-\varepsilon,
+\label{eq:1.2a}
+\end{equation}
+and all graph-dependent estimates below hold on
+\(\mathcal G_{n,\varepsilon}\), with constants allowed to depend on
+\(\varepsilon\) but not on \(n\).  To reduce notation, the superscript
+\(\varepsilon\) is suppressed inside a proof carried out at fixed
+\(\varepsilon\).
+
+\paragraph{Allocation of error probabilities.}
+Whenever a proof uses finitely many high-probability events, we
+first apply the corresponding estimates with tolerances
+\(\varepsilon/m\), where \(m\) is a fixed deterministic integer, and
+then intersect the resulting events.  We relabel the total tolerance as
+\(\varepsilon\).  Throughout, ``on the good event'' refers to this final
+intersection.  We first prove the stopped conditional estimates with respect
+to the filtration at the stated stopping coordinate, and then form the
+intersection.
+
+For
+\begin{equation}
+\mathsf J_n(p,x)
+:=
+\#\{i:\widehat A_i(p)\le x\}
+-
+\#\{j:\widehat B_j(p)\le x\},
+\label{eq:1.3}
+\end{equation}
+the unclipped half-space volumes in the bulk are
+\begin{equation}
+V^-(p,x)=x-\frac p2,\qquad
+V^+(p,x)=x+\frac{3p}{2},
+\label{eq:1.4}
+\end{equation}
+and we write
+\[
+\Delta_n^-(p,x)
+=
+\#\{i:\widehat A_i(p)\le x\}-V^-(p,x),
+\]
+\begin{equation}
+\Delta_n^+(p,x)
+=
+\#\{j:\widehat B_j(p)\le x\}-V^+(p,x).
+\label{eq:1.5}
+\end{equation}
+Thus, whenever \eqref{eq:1.4} is unclipped,
+\begin{equation}
+\boxed{
+\mathsf J_n(p,x)
+=
+\Delta_n^-(p,x)-\Delta_n^+(p,x)-2p .
+}
+\label{eq:1.6}
+\end{equation}
+
+\subsection{Predictable deferred decisions and adaptive rates}
+
+Let
+\[
+\mathcal X_n=[0,n]\times[0,1],
+\qquad
+P_i^-=(nT_i,U_i),\qquad
+P_j^+=(nS_j,V_j).
+\]
+
+\begin{lemma}[Predictable-frontier deferred decisions]
+\label{lem:deferred}
+Let \(p=g(x)\) be a left-to-right, piecewise \(C^1\), predictable graph
+with \(\Lip(g)\le\lambda<1/2\).  Define the swept sets
+\[
+H_x^-(g)
+=
+\{(t,u)\in\mathcal X_n:t+g(x)(1-u)\le x\},
+\]
+\begin{equation}
+H_x^+(g)
+=
+\{(s,v)\in\mathcal X_n:s-g(x)(1+v)\le x\}.
+\label{eq:1.7}
+\end{equation}
+Let \(\mathcal F_x^{g,0}\) be generated by the graph up to \(x\) and by all
+labeled source and target points whose trajectories have crossed it by
+coordinate \(x\).  In stopping-coordinate statements we use its usual
+augmentation
+\[
+\mathcal F_x^g
+:=
+\bigcap_{y>x}
+\bigl(\mathcal F_y^{g,0}\vee\mathcal N\bigr)
+=
+\bigcap_{q>x,\ q\in\mathbb Q}
+\bigl(\mathcal F_q^{g,0}\vee\mathcal N\bigr),
+\]
+where \(\mathcal N\) is the family of ambient terminal null events.
+Conditional on \(\mathcal F_x^g\), the unrevealed
+source labels are independent uniforms on
+\(\mathcal X_n\setminus H_x^-(g)\), the unrevealed target labels are
+independent uniforms on \(\mathcal X_n\setminus H_x^+(g)\), and the two
+families are conditionally independent.  The same assertion holds at every
+\(\mathcal F^g\)-stopping coordinate \(\tau\) with \(0\le\tau\le n\) almost
+surely.
+\end{lemma}
+
+\begin{proof}
+Spacelikeness makes both swept families increasing.  Indeed, for \(y>x\),
+\[
+[y-g(y)(1-u)]-[x-g(x)(1-u)]
+\ge(1-\lambda)(y-x)>0,
+\]
+and
+\begin{equation}
+[y+g(y)(1+v)]-[x+g(x)(1+v)]
+\ge(1-2\lambda)(y-x)>0.
+\label{eq:1.8}
+\end{equation}
+Suppose at a crossing coordinate \(x_0\) that the unrevealed points have
+the stated product-uniform law on the current complements.  Until the
+next crossing the continuation of the graph is a deterministic function
+of the exposed filtration.  If \(C_x\) is either decreasing complement and
+\(Z\) is one unrevealed label, then
+\[
+\Pp\{Z\in C_x\mid Z\in C_{x_0},\mathcal F_{x_0}^g\}
+=\frac{|C_x|}{|C_{x_0}|},
+\]
+and conditional on \(Z\in C_x\), \(Z\) is uniform on \(C_x\).
+The conditioning factorizes over unrevealed labels, so absence of a
+crossing up to \(x\) preserves the product-uniform law.
+
+Simultaneous first crossings have probability zero.  To see this, freeze
+the two initial revealed-label sets and a finite history of the previously
+exposed labels.  On each such history cell
+the graph continuation is a measurable function of the coordinates in that
+history.  If two unused labels were to cross next at the same coordinate,
+then, after fixing every coordinate except the height of the first label,
+spacelikeness makes the crossing equation injective in that height.  Thus
+the exceptional height section contains at most one point.  The height law
+is nonatomic, and there are only finitely many initial patterns, histories,
+steps, and label pairs, so the union of all simultaneous-crossing events is
+null.  The same one-coordinate argument shows that a label lies on a fixed
+frontier with probability zero.
+
+At the next crossing exactly one label is exposed almost surely.
+Condition first on entrance through a boundary slab of thickness \(h\),
+reveal that label and its position, and let \(h\downarrow0\); the
+remaining labels retain the product-uniform law on the new complement.
+There are at most \(2n\) crossings.
+
+To construct the conditional law, fix a finite labeled history \(h\) and
+the tuple \(z\) of revealed coordinates.  On that history cell define
+\(Q_{h,z,x}\) by fixing
+the revealed coordinates at \(z\) and assigning to every unrevealed source
+or target label the normalized restriction of Lebesgue measure to its
+current strict complement; take the product over the unrevealed labels.
+The boundary-slab induction gives, first for a future cylinder \(E\) and a
+generator \(D\) of the raw history sigma-field,
+\begin{equation}
+ \int_{D\cap\{h\}} Q_{h,z(\omega),x}(E)\,d\Pp(\omega)
+ =\Pp(D\cap E\cap\{h\}).
+\label{eq:1.8a}
+\end{equation}
+The kernel is measurable in the revealed tuple: all its cylinder values are
+finite products of measurable section areas divided by the corresponding
+positive complement areas.  (On terminal zero-area cells its value may be
+chosen arbitrarily.)  Summing over the finitely many histories and applying
+the pi-lambda theorem first in \(D\) and then in \(E\) extends \eqref{eq:1.8a} to the
+whole raw history sigma-field and all Borel future events.  Thus the assembled
+kernel is a regular conditional law at each deterministic coordinate.
+The identity also holds almost surely after adding ambient terminal null events.
+
+The two definitions of \(\mathcal F_x^g\) above agree: monotonicity of the raw
+filtration and density of \(\mathbb Q\) make the rational right-neighbourhoods
+cofinal among all right-neighbourhoods.  For rational \(x_m\downarrow x\),
+frontier nullity and dominated convergence give
+\(Q_{x_m}(E)\to Q_x(E)\) first for cylinders, while reverse-martingale
+convergence identifies the limit with conditioning on \(\mathcal F_x^g\).
+A second monotone-class argument extends this identification to every Borel
+\(E\).
+
+For a stopping coordinate \(0\le\tau\le n\), let
+\(\tau_m=2^{-m}\lceil2^m\tau\rceil\).  Apply the deterministic-coordinate
+conditional identity on the finitely many range slices
+\(\{\tau_m=k2^{-m}\}\).  Then
+\(\tau_m\downarrow\tau\), right continuity gives
+\(\mathcal F_\tau^g=\bigcap_m\mathcal F_{\tau_m}^g\), and the reverse
+martingale convergence theorem passes the conditional expectations to
+\(\mathcal F_\tau^g\).
+
+Continuity of the graph and the frontier-null
+statement above give monotone convergence of the remaining-set indicators
+and their normalizing areas.  Applying this argument to finite products of
+bounded Borel test functions identifies the asserted product-uniform
+conditional law at \(\tau\).
+\end{proof}
+
+For fixed \(A>10\), put \(B_n=A\sqrt n\) and
+\begin{equation}
+\mathcal R_{A,n}
+=
+\{(p,x): B_n\le x\le n-B_n,\ |p|\le B_n/8\}.
+\label{eq:1.9}
+\end{equation}
+For every \(n\ge1\), \((p,x)\in\mathcal R_{A,n}\), and \(u,v\in[0,1]\),
+\[
+\frac{7B_n}{8}\le x-p(1-u)\le n-\frac{7B_n}{8},
+\qquad
+\frac{3B_n}{4}\le x+p(1+v)\le n-\frac{3B_n}{4}.
+\]
+Thus all source and target sections lie strictly inside the rank strip
+before the curve exits \(\mathcal R_{A,n}\).  We use the unclipped area
+formulas on this interval.
+Let
+\[
+m_-(p,x)=\min\{V^-(p,x),n-V^-(p,x)\},
+\quad
+m_+(p,x)=\min\{V^+(p,x),n-V^+(p,x)\}.
+\]
+
+\begin{lemma}[Half-space regularity and adaptive crossing rates]
+\label{lem:rates}
+There is an event \(\mathcal E_{A,n}\) with
+\(\Pp(\mathcal E_{A,n})\to1\) on which, uniformly on
+\(\mathcal R_{A,n}\),
+\begin{equation}
+|\Delta_n^\pm(p,x)|
+\le
+C\bigl(\sqrt{m_\pm(p,x)\log n}+\log n\bigr).
+\label{eq:1.10}
+\end{equation}
+Moreover
+\begin{equation}
+\sup_{\mathcal R_{A,n}}
+(|\Delta_n^-|+|\Delta_n^+|)
+=O_{\Pp}(\sqrt n),
+\label{eq:1.11}
+\end{equation}
+and at \(x_R=n-B_n\),
+\begin{equation}
+\sup_{|p|\le B_n/8}
+(|\Delta_n^-(p,x_R)|+|\Delta_n^+(p,x_R)|)
+=
+O_{\Pp}(\sqrt{B_n}).
+\label{eq:1.12}
+\end{equation}
+
+Let now \(p=g(x)\) be any predictable curve in \(\mathcal R_{A,n}\)
+with \(|g'|\le\lambda\).  Write \(\tau_i^-\) and \(\tau_j^+\) for the
+source and target crossing coordinates and define the pre-crossing counts
+\[
+D_-(x-):=\#\{i:\tau_i^-<x\},
+\qquad
+D_+(x-):=\#\{j:\tau_j^+<x\},
+\]
+and the remaining counts
+\[
+M_-(x-):=n-D_-(x-),
+\qquad
+M_+(x-):=n-D_+(x-).
+\]
+Put \(K(x-)=D_-(x-)-D_+(x-)\) and let
+\(w_-(x)=g'_-(x)\) be the predictable left slope.  Away from crossing
+coordinates, \(K(x-)=\mathsf J_n(g(x),x)\) and \(w_-(x)=g'(x)\).
+The predictable \emph{marked} crossing intensities are
+\begin{equation}
+r_-(x)\,[1-w_-(x)(1-u)]\,du,
+\qquad
+r_+(x)\,[1+w_-(x)(1+v)]\,dv,
+\label{eq:1.13}
+\end{equation}
+where
+\begin{equation}
+r_-(x)
+=
+\frac{M_-(x-)}{n-V^-(g(x),x)},
+\qquad
+r_+(x)
+=
+\frac{M_+(x-)}{n-V^+(g(x),x)}.
+\label{eq:1.14}
+\end{equation}
+Consequently the total source and target jump rates are
+\begin{equation}
+\lambda_-(x)
+=
+r_-(x)\Bigl(1-\frac {w_-(x)}2\Bigr),
+\qquad
+\lambda_+(x)
+=
+r_+(x)\Bigl(1+\frac{3w_-(x)}{2}\Bigr),
+\label{eq:1.15}
+\end{equation}
+and, on \(\mathcal E_{A,n}\),
+\begin{equation}
+\sup_x|r_\pm(x)-1|=o(1)
+\label{eq:1.16}
+\end{equation}
+uniformly along every such curve before it exits
+\(\mathcal R_{A,n}\).
+\end{lemma}
+
+\begin{proof}
+The sets in \eqref{eq:1.7}, with deterministic \(p,x\), form two finite-VC
+classes.  The standard relative VC Bernstein inequality (obtained by
+dyadic peeling according to the smaller of a set and its complement,
+followed by Sauer's lemma and Bernstein's inequality) gives \eqref{eq:1.10};
+the ordinary VC maximal inequality gives \eqref{eq:1.11}.
+
+For \eqref{eq:1.12}, keep \(x=x_R\) fixed.  As \(p\) varies, each complement is
+a nested one-parameter family contained in a deterministic set of area
+\(O(B_n)\).  If \(Z\) is the number of sample points in the largest
+member, then \(Z=O_{\Pp}(B_n)\) and
+\(Z-|C|=O_{\Pp}(\sqrt{B_n})\).  Conditional on \(Z\), the nested counts
+are an empirical distribution function of \(Z\) iid points; its maximal
+fluctuation is \(O_{\Pp}(\sqrt Z)\).  This proves \eqref{eq:1.12}.
+
+For the rates, invoke Lemma~\ref{lem:deferred}.  Conditional on the
+explored filtration, the unrevealed source labels are uniform on a region
+of area \(n-V^-\).  Advancing the graph by \(dx\) sweeps source area
+\[
+\int_0^1[1-w(1-u)]\,du\,dx
+=
+\Bigl(1-\frac w2\Bigr)dx,
+\]
+and marked \(u\)-slice area
+\([1-w(1-u)]\,du\,dx\).  Multiplication by the current unexplored
+density gives the first formula in \eqref{eq:1.13} and the first rate in
+\eqref{eq:1.15}.  The target swept area is
+\[
+\int_0^1[1+w(1+v)]\,dv\,dx
+=
+\Bigl(1+\frac{3w}{2}\Bigr)dx,
+\]
+giving the second formulas.
+
+To identify the predictable intensities, fix deterministic \(s<t\) before exit from
+\(\mathcal R_{A,n}\) and \(B\in\mathcal F_s^g\).  On each of the finitely many
+revealed-label histories, Fubini's theorem and the conditional product law give
+the exact identities
+\[
+\E\bigl[\mathbf 1_B(D_-(t)-D_-(s))\bigr]
+=
+\E\biggl[\mathbf 1_B\int_{(s,t]}\lambda_-(x)\,dx\biggr],
+\]
+\begin{equation}
+\E\bigl[\mathbf 1_B(D_+(t)-D_+(s))\bigr]
+=
+\E\biggl[\mathbf 1_B\int_{(s,t]}\lambda_+(x)\,dx\biggr].
+\label{eq:1.15a}
+\end{equation}
+The same calculation with bounded Borel mark tests gives the marked versions
+of these identities.  Frontier-nullity removes the endpoints, while the
+strictly positive remaining areas in \(\mathcal R_{A,n}\) justify every
+normalization.  A monotone-class extension from the predictable rectangles
+\(B\times(s,t]\), followed by finite linear combinations and bounded
+approximation, proves that the counting processes compensated by
+\(\int\lambda_\pm\) are martingales.  This establishes the predictable
+intensity formulas \eqref{eq:1.13}--\eqref{eq:1.15}.
+
+Finally, on \(\mathcal R_{A,n}\) the
+unexplored volumes are at least \(cB_n\); \eqref{eq:1.10} divided by these
+volumes gives \eqref{eq:1.16}.
+\end{proof}
+
+\subsection{Inward feedback, current energy, and spacelikeness}
+
+Starting at \(x=B_n\) with \(g_n(B_n)=0\), construct the graph recursively
+by
+\begin{equation}
+g_n'(x)=\lambda\,\sgn K_n(x),
+\qquad
+K_n(x):=\mathsf J_n(g_n(x),x),
+\label{eq:1.17}
+\end{equation}
+between crossings, using the new value of \(K_n\) immediately after a
+crossing and \(\sgn0=0\).  Define
+\[
+\tau_{\rm sh}
+=
+\inf\{x\ge B_n:|g_n(x)|=B_n/8\},
+\]
+\[
+\tau_{\rm reg}
+=
+\inf\{x\ge B_n:|r_-(x)-1|\vee|r_+(x)-1|\ge\eta\},
+\]
+\begin{equation}
+\tau_n
+=
+(n-B_n)\wedge\tau_{\rm sh}\wedge\tau_{\rm reg}.
+\label{eq:1.18}
+\end{equation}
+
+\begin{lemma}[Lower occupation from predictable rates]
+\label{lem:occupation}
+Let \(N\) be a simple counting process with predictable intensity
+\(\Lambda(x)\), and assume on a stochastic interval
+\([\sigma,\sigma+r]\) that
+\(0<c_0\le\Lambda\le C_0<\infty\).  Then there are \(a_0,b_0>0\)
+depending only on \(c_0,C_0\) such that
+\begin{equation}
+\Pp\{N(\sigma+r)-N(\sigma)\le a_0r\mid\mathcal F_\sigma\}
+\le e^{-b_0r}.
+\label{eq:1.19}
+\end{equation}
+The upper rate bound also gives exponential upper tails for the number
+of jumps on length-\(r\) intervals.
+\end{lemma}
+
+\begin{proof}
+For \(\theta>0\), the exponential counting-process martingale
+\[
+\exp\left\{-\theta N(x)
++(1-e^{-\theta})\int^x\Lambda(y)\,dy\right\}
+\]
+and optional sampling between \(\sigma\) and \(\sigma+r\) give
+\[
+\Pp\{N(\sigma+r)-N(\sigma)\le ar\mid\mathcal F_\sigma\}
+\le
+\exp\{\theta ar-(1-e^{-\theta})c_0r\}.
+\]
+Take, for example, \(\theta=1\) and
+\(a_0=c_0(1-e^{-1})/2\).  The upper tail is analogous.
+\end{proof}
+
+For the endpoint estimate, we separate the failure time from the
+deterministic right endpoint.  Put
+\begin{equation}
+\widehat\tau_n:=\tau_{\rm sh}\wedge\tau_{\rm reg},
+\qquad x_R:=n-B_n,
+\label{eq:1.18a}
+\end{equation}
+and define the modified killing time
+\begin{equation}
+\tau_n^\dagger:=
+\begin{cases}
+\widehat\tau_n,&\widehat\tau_n<x_R,\\
++\infty,&\widehat\tau_n\ge x_R.
+\end{cases}
+\label{eq:1.18b}
+\end{equation}
+Then \(\tau_n^\dagger\) is a stopping coordinate and the process is
+alive at \(x_R\) exactly when there has been no premature bulk failure.
+
+\begin{theorem}[Feedback current estimates]
+\label{thm:A1}
+Before \(\tau_n\), the feedback current has a uniform drift toward zero.
+There are deterministic \(c,C>0\) such that, for all large \(n\),
+whenever \(K_n(x)\ne0\),
+\begin{equation}
+\sgn(K_n(x))(\lambda_-(x)-\lambda_+(x))\le-c,
+\qquad
+c\le\lambda_-(x),\lambda_+(x)\le C.
+\label{eq:1.20}
+\end{equation}
+Consequently
+\begin{equation}
+\E\int_{B_n}^{\tau_n}K_n(x)^2\,dx
+\le
+Cn+C\E|K_n(B_n)|^3
+=
+O(n),
+\label{eq:1.21}
+\end{equation}
+\begin{equation}
+\sup_{B_n\le x\le\tau_n}|K_n(x)|
+=
+O_{\Pp}(n^{1/4}+\log n),
+\label{eq:1.22}
+\end{equation}
+and
+\begin{equation}
+K_n(n-B_n)\mathbf 1_{\{\tau_n=n-B_n\}}
+=
+O_{\Pp}(1).
+\label{eq:1.23}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Before \(\tau_n\), \(1-\eta<r_\pm<1+\eta\).  If \(K_n>0\),
+then \(g_n'=\lambda\), and
+\[
+\lambda_- -\lambda_+
+\le
+(1+\eta)\Bigl(1-\frac\lambda2\Bigr)
+-
+(1-\eta)\Bigl(1+\frac{3\lambda}{2}\Bigr)
+=
+-2\lambda+\eta(2+\lambda)\le-c.
+\]
+If \(K_n<0\), then \(g_n'=-\lambda\), and
+\[
+\lambda_- -\lambda_+
+\ge
+(1-\eta)\Bigl(1+\frac\lambda2\Bigr)
+-
+(1+\eta)\Bigl(1-\frac{3\lambda}{2}\Bigr)
+=
+2\lambda-\eta(2-\lambda)\ge c.
+\]
+The individual rate bounds follow from \(\lambda<1/8\).
+
+For \(V(k)=|k|^3\), the jump generator satisfies
+\begin{equation}
+\mathcal LV(k)\le-c_1k^2+C_1.
+\label{eq:1.24}
+\end{equation}
+Dynkin's formula up to \(\tau_n\) gives \eqref{eq:1.21}.  At \(x=B_n\) the shear
+is zero, so \(K_n(B_n)\) is the difference of two independent
+\(\mathrm{Bin}(n,B_n/n)\) variables and
+\[
+\E|K_n(B_n)|^3=O(B_n^{3/2})=O(n^{3/4})
+\]
+for fixed \(A\).
+
+For \(W(k)=e^{\theta|k|}\), sufficiently small \(\theta>0\) gives
+\begin{equation}
+\mathcal LW(k)\le-aW(k)+b.
+\label{eq:1.25}
+\end{equation}
+We use a stopped excursion estimate to control the maximum current.  For
+\(R\ge1\), put
+\[
+ W_R(k):=\exp\{\theta(|k|-R)_+\}.
+\]
+The same one-step calculation, including the flat region \(|k|\le R\),
+gives
+\begin{equation}
+ \mathcal L W_R(k)\le-aW_R(k)+b
+\label{eq:1.25c}
+\end{equation}
+with the same positive constants after increasing \(b\), if necessary.
+Let \(G_R=\{|K_n(B_n)|\le R\}\), which is
+\(\mathcal F_{B_n}\)-measurable, and put \(T_n=x_R-B_n\le n\).
+Multiplying the stopped Dynkin identity by \(\mathbf1_{G_R}\), using
+\(W_R(K_n(B_n))=1\) on \(G_R\), and discarding the nonnegative terminal
+term gives
+\begin{equation}
+ \E\left[\mathbf1_{G_R}
+   \int_{B_n}^{\tau_n}W_R(K_n(x-))\,dx\right]
+ \le \frac{1+bT_n}{a}.
+\label{eq:1.25d}
+\end{equation}
+For \(q\ge1\), let \(J_{R,q}\) count outward jumps, through the
+right-closed stopping coordinate \(\tau_n\), which enter
+\(\{|K_n|\ge R+q\}\) from its complement.  On \(G_R\), attainment of
+height \(R+q\) forces \(J_{R,q}\ge1\).  Immediately before every such
+jump,
+\[
+ W_R(K_n(x-))\ge e^{\theta(q-1)}.
+\]
+The two outward directions are disjoint, and their predictable rates are
+bounded by a deterministic constant \(C\).  The compensator identity and
+\eqref{eq:1.25d} therefore yield
+\begin{equation}
+\Pp\!\left(G_R\cap
+  \left\{\sup_{B_n\le x\le\tau_n}|K_n(x)|\ge R+q\right\}\right)
+ \le \frac{C}{a}(1+bT_n)e^{-\theta(q-1)}.
+\label{eq:1.25e}
+\end{equation}
+Together with the preceding cubic-moment estimate and Markov's inequality,
+\begin{equation}
+ \Pp\!\left\{\sup_{B_n\le x\le\tau_n}|K_n(x)|\ge R+q\right\}
+ \le
+ \frac{\E|K_n(B_n)|^3}{R^3}
+ +\frac{C}{a}(1+bT_n)e^{-\theta(q-1)}.
+\label{eq:1.25f}
+\end{equation}
+Choose \(R=D\sqrt{B_n}\) and
+\(q=2\theta^{-1}\log(n+1)\).  The first term in \eqref{eq:1.25f} is
+\(O(D^{-3})\), uniformly in \(n\), and the second is \(O(n^{-1})\).
+First choosing \(D\) and then letting \(n\to\infty\) proves
+\(\sup|K_n|=O_{\Pp}(\sqrt{B_n}+\log n)\), which is \eqref{eq:1.22}.
+
+For \eqref{eq:1.23}, kill the process at \(\tau_n^\dagger\), send the killed
+state to a cemetery point \(\partial\), and set \(W(\partial)=0\).
+Killing adds only a nonpositive jump to the generator, hence
+\[
+\widetilde{\mathcal L}W\le-aW+b.
+\]
+Dynkin's formula and Gronwall give, for \(B_n\le x\le x_R\),
+\begin{equation}
+\E\!\left[
+e^{\theta|K_n(x)|};\,\tau_n^\dagger>x
+\right]
+\le
+e^{-a(x-B_n)}
+\E e^{\theta|K_n(B_n)|}
++\frac ba.
+\label{eq:1.25a}
+\end{equation}
+At \(x=B_n\),
+\[
+K_n(B_n)=X_n-Y_n,\qquad
+X_n,Y_n\stackrel{\rm iid}{\sim}
+\operatorname{Bin}\!\left(n,\frac{B_n}{n}\right).
+\]
+Using \(e^{\theta|z|}\le e^{\theta z}+e^{-\theta z}\) and the binomial
+mgf,
+\begin{equation}
+\E e^{\theta|K_n(B_n)|}
+\le
+2\exp\!\left\{
+2B_n(\cosh\theta-1)+O(B_n^2/n)
+\right\}
+\le e^{C_\theta B_n}.
+\label{eq:1.25b}
+\end{equation}
+At \(x=x_R\), the event \(\{\tau_n^\dagger>x_R\}\) is exactly
+\(\{\widehat\tau_n\ge x_R\}\), equivalently
+\(\{\tau_n=x_R\}\).  The first term in \eqref{eq:1.25a} is
+\[
+\exp\{-a(n-2B_n)+C_\theta B_n\}=o(1),
+\]
+because \(B_n=A\sqrt n\).  Therefore
+\[
+\Pp\{|K_n(x_R)|>M,\ \tau_n=x_R\}
+\le
+e^{-\theta M}\left(\frac ba+o(1)\right),
+\]
+uniformly in \(n\), proving \eqref{eq:1.23}.
+\end{proof}
+
+\begin{theorem}[Spacelike shear control]
+\label{thm:A2}
+For every \(\varepsilon>0\) there is a finite
+\(A=A(\varepsilon)>10\) such that, with \(B_n=A\sqrt n\),
+\begin{equation}
+\Pp\{\tau_n=n-B_n\}\ge1-\varepsilon-o(1).
+\label{eq:1.26}
+\end{equation}
+On this event
+\begin{equation}
+\Lip(g_n)\le\lambda<\frac12,
+\qquad
+\sup_{B_n\le x\le n-B_n}|g_n(x)|=O_{\Pp}(\sqrt n),
+\label{eq:1.27}
+\end{equation}
+and at the right junction
+\begin{equation}
+q_n:=g_n(n-B_n)
+=
+O_{\Pp}(\sqrt{B_n})
+=
+O_{\Pp}(n^{1/4}).
+\label{eq:1.28}
+\end{equation}
+Extend \(g_n\) by the constant \(0\) to the left of \(B_n\) and by the
+constant \(q_n\) to the right of \(n-B_n\).  The extension is globally
+\(\lambda\)-Lipschitz.
+\end{theorem}
+
+\begin{proof}
+On \(\mathcal E_{A,n}\), \eqref{eq:1.16} is \(<\eta\) for all large \(n\), so
+\(\tau_{\rm reg}\) cannot occur before
+\(\tau_{\rm sh}\wedge(n-B_n)\).  While the graph remains in the bulk
+rectangle, \eqref{eq:1.6} gives
+\begin{equation}
+2g_n(x)
+=
+\Delta_n^-(g_n(x),x)-\Delta_n^+(g_n(x),x)-K_n(x).
+\label{eq:1.29}
+\end{equation}
+By \eqref{eq:1.11}, the bridge supremum divided by \(\sqrt n\) is tight, while
+\eqref{eq:1.22} is \(o_{\Pp}(\sqrt n)\).  At the first shear hit,
+\(2|g_n|=A\sqrt n/4\).  Therefore
+\[
+\limsup_n\Pp\{\tau_{\rm sh}<n-B_n\}
+\le
+\Pp\{Z>A/8\}+o(1)
+\]
+for a tight random variable \(Z\).  Choose \(A\) so the right side is
+\(<\varepsilon\), proving \eqref{eq:1.26}.
+
+On survival, \eqref{eq:1.23}, \eqref{eq:1.29}, and the nested endpoint bound \eqref{eq:1.12} give
+\[
+2|q_n|
+\le
+|\Delta_n^-(q_n,x_R)|
++
+|\Delta_n^+(q_n,x_R)|
++
+|K_n(x_R)|
+=
+O_{\Pp}(\sqrt{B_n}),
+\]
+which is \eqref{eq:1.28}.  The constant extensions preserve the Lipschitz bound.
+\end{proof}
+
+\paragraph{Predictable continuation on all samples.}
+To form the marked rooted laws in Section~4, we define a predictable graph
+on every sample.  The compactness estimates above will then apply on the
+final good event.  Follow
+\eqref{eq:1.17} until
+\[
+\bar\tau_n:=\widehat\tau_n\wedge(n-B_n),
+\]
+and, if \(\bar\tau_n<n-B_n\), keep the graph height constant from
+\(\bar\tau_n\) onward until all source and target trajectories have crossed; use
+the same constant extensions at the two outer tails.  Denote this everywhere-defined
+predictable spacelike graph by \(\bar g_n\).  On
+\(\{\tau_n=n-B_n\}\), it agrees with the graph already used above.
+
+This continuation supplies an unconditioned finite crossing path and its
+regular conditional likelihood.  We use \(\bar g_n\) in the globally marked
+constructions below and suppress the bar.  On the good event, all previous
+estimates apply to this graph.
+
+We next control the boundary contribution to the energy of the increasing matching.
+
+\begin{lemma}[Boundary current energy]
+\label{lem:boundary}
+Write \(B=B_n\), \(R=n-B\), and \(q_n=g_n(R)\).  On the left,
+\begin{equation}
+\E\int_0^B\mathsf J_n(0,x)^2\,dx\le CB^2.
+\label{eq:1.30}
+\end{equation}
+For fixed \(L\), let the \(\mathcal F_R\)-measurable localization be
+\begin{equation}
+\mathcal A_{n,L}:=
+\{\tau_n=R,\ |q_n|\le L\sqrt B,\ |q_n|\le B/8,
+\ |K_n(R)|\le L,\ B/2\le m_\pm(R)\le2B\}.
+\label{eq:1.31}
+\end{equation}
+Here \(m_\pm(R)\) are the two remaining label counts.  On this event,
+for every deterministic \(x\in[R,n+2B]\),
+\begin{equation}
+\E[\mathsf J_n(q_n,x)^2\mid\mathcal F_R]\le C_LB,
+\qquad
+\E\left[\left.\int_R^{n+2B}\mathsf J_n(q_n,x)^2\,dx
+\right|\mathcal F_R\right]\le C_LB^2.
+\label{eq:1.32}
+\end{equation}
+For every prescribed tolerance, first choose \(A\) using
+Theorem~\ref{thm:A2} and then \(L\)
+large enough that the failure probability of \(\mathcal A_{n,L}\) is
+below that tolerance for all sufficiently large \(n\).
+\end{lemma}
+
+\begin{proof}
+At zero shear the two counts are independent binomials with equal mean \(x\),
+so \(\E\mathsf J_n(0,x)^2\le2x\), proving \eqref{eq:1.30}.
+Conditional on \(\mathcal F_R\), Lemma~\ref{lem:deferred} makes the unseen
+labels independent uniforms on their remaining complements.  If these
+complements have areas \(C_\pm(x)\), put \(\rho_\pm=m_\pm(R)/C_\pm(R)\).
+The constant shear gives
+\begin{equation}
+C_\pm(R)=B+O(|q_n|),\quad
+|C_\pm(x)-(n-x)_+|\le2|q_n|,\quad
+|\rho_+-\rho_-|\le C\frac{|q_n|+|K_n(R)|}{B}.
+\label{eq:1.32a}
+\end{equation}
+The two remaining populations at \(x\) are conditionally independent
+binomials.  Their difference consequently has conditional mean at most
+\(C(|q_n|+|K_n(R)|)\) in absolute value and variance at most \(4B\).
+This proves the first bound in \eqref{eq:1.32}; conditional Fubini over an interval
+of length \(3B\) proves the second.  The localization probability follows
+from Theorem~\ref{thm:A2}, endpoint-current tightness, and the remaining-count bounds.
+\end{proof}
+
+\begin{lemma}[Right interval density]
+\label{lem:right-density}
+For fixed \(L\), set
+\begin{equation}
+H=n-(8L\sqrt B+1),\qquad e_n=60\log n+\tfrac14.
+\label{eq:1.33}
+\end{equation}
+On \(\mathcal A_{n,L}\), except for conditional probability at most
+\(16n^{-3}\), every \(R\le s\le t\le H\) satisfies
+\begin{equation}
+N_\pm((s,t))\ge\tfrac18(t-s)-e_n.
+\label{eq:1.34}
+\end{equation}
+Here \(N_\pm\) count the physical graph intersections of each color.
+\end{lemma}
+
+\begin{proof}
+The strip \([R,H]\) is unclipped by the constant shear.  Conditional
+on \(\mathcal F_R\), each color's unseen intersections have expected
+count at least \((b-a)/4\) in every interval \((a,b)\subset[R,H]\):
+its swept area is \(b-a\), its remaining area is at most \(2B\), and
+its remaining population is at least \(B/2\).
+The binomial lower-tail bound therefore gives
+\begin{equation}
+\Pp\{N_\pm((a,b))<(b-a)/8-u\mid\mathcal F_R\}
+\le2e^{-u/12}.
+\label{eq:1.35}
+\end{equation}
+Apply this to integer endpoints in \([0,n]\), to both colors, with
+\(u=60\log n\).  The union bound is at most
+\(4(n+1)^2n^{-5}\le16n^{-3}\).  Round the endpoints of an arbitrary
+\((s,t)\) inward to integers.  The lost length is at most two, costing
+\(2/8=1/4\); intervals shorter than two satisfy \eqref{eq:1.34} trivially.
+Every unseen crossing in this strip is an actual graph intersection,
+so the resulting lower bound also holds for the full graph counts.
+\end{proof}
+
+Theorems~\ref{thm:A1} and~\ref{thm:A2} imply, on the joint good event,
+\begin{equation}
+\int_B^{n-B}K_n(x)^2\,dx=O_{\Pp}(n),
+\label{eq:1.36}
+\end{equation}
+and the constant extensions make the graph globally spacelike.
+
+\subsection{Energy of the increasing graph matching}
+
+Let \(\widehat\xi_i,\widehat\eta_j\) be the unique intersections
+\begin{equation}
+\widehat A_i(g_n(\widehat\xi_i))=\widehat\xi_i,\qquad
+\widehat B_j(g_n(\widehat\eta_j))=\widehat\eta_j.
+\label{eq:1.37}
+\end{equation}
+Uniqueness follows from \(\Lip(g_n)<1/2\).  Match the two intersection
+lists increasingly, with permutation \(\tau_n^g\), and set
+\begin{equation}
+d_i^g=|\widehat\eta_{\tau_n^g(i)}-\widehat\xi_i|.
+\label{eq:1.38}
+\end{equation}
+Their rank discrepancy is exactly the graph current:
+\begin{equation}
+\#\{i:\widehat\xi_i\le x\}-\#\{j:\widehat\eta_j\le x\}=K_n(x).
+\label{eq:1.39}
+\end{equation}
+Write \(l(e)\le r(e)\) for an edge's two endpoints.
+
+\begin{lemma}[Stopped lower occupation]
+\label{lem:stopped-occ}
+If a simple counting process \(N\) has predictable intensity
+\(c_0\le\Lambda(x)\le C_0\) before a stopping coordinate \(\tau\), then
+there are \(a_0,b_0>0\), depending only on \(c_0,C_0\), such that
+for every stopping coordinate \(\sigma\) and deterministic \(u\ge0\),
+\begin{equation}
+\Pp\{N(\sigma+u)-N(\sigma)\le a_0u,\ \tau\ge\sigma+u
+\mid\mathcal F_\sigma\}\le e^{-b_0u}.
+\label{eq:1.39a}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Apply the exponential counting-process martingale as in
+Lemma~\ref{lem:occupation}, stopping at \(\tau\).  On the event displayed,
+the compensator between \(\sigma\) and \(\sigma+u\) is at least \(c_0u\).
+Optional sampling gives the bound with survival inside the probability.
+\end{proof}
+
+\begin{lemma}[Stopped graph rank-gap energy]
+\label{lem:rankgap}
+For two simple point processes started with no unmatched points, suppose
+both predictable intensities remain in \([c_0,C_0]\) before \(\tau\).
+Their increasing matching satisfies
+\begin{equation}
+\E\sum_e\bigl(\min\{r(e),\tau\}-l(e)\bigr)_+^2
+\le C\E\int_0^\tau(1+K(x)^2)\,dx.
+\label{eq:1.40}
+\end{equation}
+The same bound holds when only edges completed before \(\tau\) are retained.
+\end{lemma}
+
+\begin{proof}
+Charge an edge at its actual left endpoint \(x\).  A censored gap longer
+than \(u\) requires \(x+u<\tau\), and either \(|K(x)|>c_1u\) or
+fewer than \(c_2u\) opposite-color points in \((x,x+u]\).  Thus
+Lemma~\ref{lem:stopped-occ} gives
+\begin{equation}
+\Pp\{\text{censored gap}>u\mid\mathcal F_x\}
+\le\mathbf1_{\{|K(x)|>c_1u\}}+Ce^{-c_2u}.
+\label{eq:1.41}
+\end{equation}
+Integration against \(2u\,du\) and summation over genuine left endpoints
+using the stopped compensators prove \eqref{eq:1.40}.  Censoring endpoints creates
+no new arrivals at \(\tau\).
+\end{proof}
+
+\paragraph{Energy before the right boundary.}
+Stop the zero-shear left process at its first rate exit from \([1/2,2]\),
+capped at \(B\).  This stop reaches \(B\) except on an \(o(1)\) event:
+\(N_\pm(B)\le2B\) has exponentially high probability and \(B=o(n)\).
+Let \(P_n\) be its censored prefix energy, \(I_n\) the sum of squared
+suffixes after \(B\) of initial-backlog edges completed by \(\tau_n\), and
+\(U_n\) the energy of edges starting after \(B\) and completed by \(\tau_n\).
+These are stopped random variables on the original sample space.  Put
+\begin{equation}
+Z_n^{\rm pre}:=2P_n+2I_n+U_n.
+\label{eq:1.41a}
+\end{equation}
+The left bound \eqref{eq:1.30} and Lemma~\ref{lem:rankgap} give
+\(\E P_n\le C(B+B^2)\).
+
+For the initial backlog, condition on
+\(\mathcal F_B\): its ranks have backlogs at most
+\(1,\ldots,|K_n(B)|\).  The same occupation argument gives a squared
+suffix bound \(C(k^2+1)\) for backlog \(k\).  Consequently
+\(\E I_n\le C(n+\E|K_n(B)|^3)\).
+
+For bulk edges the endpoint charging
+argument in \eqref{eq:1.41}, now starting at their actual arrivals after \(B\),
+and Theorem~\ref{thm:A1} give \(\E U_n\le C(n+\E|K_n(B)|^3)\).  Since
+\(\E|K_n(B)|^3=O(B^{3/2})\) and \(B=A\sqrt n\),
+\begin{equation}
+\boxed{\E Z_n^{\rm pre}\le C_A n.}
+\label{eq:1.41b}
+\end{equation}
+On left and bulk survival, every edge completed by \(R\) is controlled
+by this majorant: an edge crossing \(B\) is split there using
+\((a+b)^2\le2a^2+2b^2\).
+
+\paragraph{Two-cut energy accounting.}
+For an increasing edge with \(R<r(e)\le H\), let
+\(d_R(e)=r(e)-\max\{R,l(e)\}\).  Under \eqref{eq:1.34}, rank order implies
+\(\tfrac18(r(e)-x)-e_n\le|K_n(x)|\) on this suffix.  Integrating and
+using Young's inequality yields
+\[
+d_R(e)^2\le32\int_{\max\{R,l(e)\}}^{r(e)}|K_n(x)|\,dx+256e_n^2.
+\]
+At each cut the increasing edges all cross in the same direction, and
+their number is \(|K_n(x)|\).  If \(N_R\) counts edges with \(r(e)>R\),
+summing the preceding inequality gives
+\begin{equation}
+2\sum_{R<r(e)\le H}d_R(e)^2
+\le64\int_R^H K_n(x)^2\,dx+512N_R e_n^2.
+\label{eq:1.42a}
+\end{equation}
+We next bound the left prefixes of edges crossing \(R\).
+Choose a fixed \(W\) so large that each color has at least \(L\) arrivals
+in \([R-W,R]\), outside a probability smaller than any prescribed tolerance
+on bulk survival.  Lemma~\ref{lem:stopped-occ}, applied to the deterministic
+subinterval \([R-W,R-W/2]\), proves this assertion.  Since
+\(|K_n(R)|\le L\), rank order then bounds the entire crossing-prefix
+contribution by
+\begin{equation}
+2\sum_{l(e)\le R<r(e)}(R-l(e))^2\le2LW^2.
+\label{eq:1.42b}
+\end{equation}
+Splitting at \(B\) and \(R\), and keeping full lengths for \(r(e)>H\), gives
+\begin{equation}
+\sum_e|e|^2\le Z_n^{\rm pre}+2LW^2+
+64\int_R^H K_n(x)^2\,dx+512N_R e_n^2+E_n^{\rm term},
+\label{eq:1.42c}
+\end{equation}
+where \(E_n^{\rm term}:=\sum_{r(e)>H}|e|^2\).  In particular, \eqref{eq:1.42c}
+includes the prefixes of edges crossing the first right cut.
+
+\begin{lemma}[Terminal localization]
+\label{lem:terminal-local}
+Fix \(a>0\).  On \(\mathcal A_{n,L}\) and the right-density event, also
+require \(|K_n(H)|\le a\sqrt B\).  For all sufficiently large \(n\),
+\begin{equation}
+N_{\rm term}\le N_R\le4B,\qquad
+E_n^{\rm term}\le4(10L+8a+9)^2B^2.
+\label{eq:1.42d}
+\end{equation}
+The added current event fails on \(\mathcal A_{n,L}\) with probability
+at most \(C_L/a^2\).
+\end{lemma}
+
+\begin{proof}
+Each edge counted by \(N_R\) uses a remaining endpoint at \(R\), so
+\(N_R\le m_-(R)+m_+(R)\le4B\).  Put
+\(V=8(a\sqrt B+e_n)\).  For large \(n\), \(R\le H-V\) and
+\(e_n\le\sqrt B\).  The interval bound \eqref{eq:1.34} gives at least
+\(a\sqrt B\ge|K_n(H)|\) points of each color in \((H-V,H)\).
+Thus every edge crossing \(H\) starts after \(H-V\); all right endpoints
+are at most \(n+2|q_n|\).  Every terminal length is consequently at most
+\[
+n+2|q_n|-H+V\le(10L+8a+9)\sqrt B.
+\]
+This proves \eqref{eq:1.42d}.  The failure bound for \(|K_n(H)|\) is Chebyshev's
+inequality applied to the pointwise conditional second moment in \eqref{eq:1.32}.
+\end{proof}
+
+\begin{theorem}[Energy of the comparison matching]
+\label{thm:I3}
+For every \(\varepsilon>0\) there are finite
+\(A=A(\varepsilon)\) and \(C=C(\varepsilon)\) such that
+\begin{equation}
+\boxed{\Pp\left\{\sum_{i=1}^n
+|\widehat\eta_{\tau_n^g(i)}-\widehat\xi_i|^2\le Cn\right\}
+\ge1-\varepsilon-o(1).}
+\label{eq:1.42}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Allocate fixed fractions of \(\varepsilon\) to Theorem~\ref{thm:A2},
+the boundary localization,
+and the backward window in \eqref{eq:1.42b}, choosing \(A,L,W\) in that order.
+Then choose \(a\) large enough for Lemma~\ref{lem:terminal-local}.
+The expectation estimates \eqref{eq:1.41b} and \eqref{eq:1.32}, with
+\(\mathcal A_{n,L}\in\mathcal F_R\), allow deterministic \(K_1,K_2\) such that
+\begin{equation}
+\Pp\{Z_n^{\rm pre}>K_1n\}<\varepsilon/8,\qquad
+\Pp\!\left(\mathcal A_{n,L}\cap
+\left\{\int_R^{n+2B}K_n(x)^2\,dx>K_2B^2\right\}\right)<\varepsilon/8.
+\label{eq:1.42e}
+\end{equation}
+The left-rate and right-grid failures are \(o(1)\).  On the remaining
+events, \eqref{eq:1.42c}--\eqref{eq:1.42e}, \(N_R\le4B\), and \(e_n^2\le B\) give
+\begin{equation}
+\sum_e|e|^2\le K_1n+2LW^2+
+\bigl[64K_2+2048+4(10L+8a+9)^2\bigr]B^2\le Cn.
+\label{eq:1.42f}
+\end{equation}
+Here \(B^2=A^2n\); the terminal \(O(B^2)=O(n)\) bound suffices.
+Adding the allocated failure probabilities proves \eqref{eq:1.42}.
+\end{proof}
+
+\subsection{Vanishing normalized graph height}
+
+\begin{corollary}[Vanishing normalized graph height]
+\label{cor:I4}
+For the feedback graph define
+\[
+\gamma_n(z):=\frac1n g_n(nz).
+\]
+Then
+\begin{equation}
+\Lip(\gamma_n)\le\lambda
+\label{eq:1.43}
+\end{equation}
+deterministically, and for every \(\delta>0\),
+\begin{equation}
+\Pp\left(
+\mathcal G_{n,\varepsilon}\cap
+\{\|\gamma_n\|_\infty>\delta\}
+\right)\longrightarrow0.
+\label{eq:1.44}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+Rescaling preserves the Lipschitz constant.  The graph starts at zero and is
+stopped no later than its first shear exit.  Continuity at that stop and constant
+extension give the deterministic bound
+\[
+\|g_n\|_\infty\le B_n/8,
+\qquad
+\|\gamma_n\|_\infty\le\frac{A}{8\sqrt n}\longrightarrow0.
+\]
+On the survival event this stopped graph agrees with the horizon graph used
+above.  This proves \eqref{eq:1.44}.  The same normalized-height bound holds without
+conditioning for the everywhere-defined stopped continuation.
+\end{proof}
+
+The Euclidean assignment is equivalently the minimizer of the residual
+\begin{equation}
+c_{ij}:=D_{ij}L\!\left(\frac{S_j-T_i}{D_{ij}}\right),
+\qquad
+L(s):=\sqrt{1+s^2}-1,
+\label{eq:1.45}
+\end{equation}
+because the subtracted horizontal term is permutation invariant.
+
+\section{Quadratic localization of the optimizer}
+\label{sec:localization}
+
+We now transfer the squared-length bound from the comparison matching to
+the Euclidean optimizer.  Subtracting row and column potentials leaves
+the optimizer unchanged and makes the cost comparable to squared distance
+along the graph.
+
+Put
+\[
+\xi_i:=\frac{\widehat\xi_i}{n},\qquad
+\eta_j:=\frac{\widehat\eta_j}{n}.
+\]
+Then
+\begin{equation}
+T_i+a_i\gamma_n(\xi_i)=\xi_i,\qquad
+S_j-b_j\gamma_n(\eta_j)=\eta_j.
+\label{eq:2.1}
+\end{equation}
+
+\subsection{Exact feedback gauge}
+
+For
+\[
+\Phi_n(x):=\int_0^x L'(\gamma_n(s))\,ds
+\]
+define row and column potentials
+\[
+\alpha_i:=a_iL(\gamma_n(\xi_i))-\Phi_n(\xi_i),\qquad
+\beta_j:=b_jL(\gamma_n(\eta_j))+\Phi_n(\eta_j),
+\]
+and the gauged edge cost
+\begin{equation}
+\Gamma^{(n)}_{ij}:=c_{ij}-\alpha_i-\beta_j.
+\label{eq:2.2}
+\end{equation}
+Since \(\sum_i\alpha_i+\sum_j\beta_j\) is independent of the permutation,
+the Euclidean optimizer \(\sigma_n\) also minimizes
+\(\sum_i\Gamma^{(n)}_{i,\sigma(i)}\).
+
+For a fixed pair write
+\[
+d:=\eta_j-\xi_i,\quad
+u:=\gamma_n(\xi_i),\quad
+v:=\gamma_n(\eta_j),\quad
+D:=a_i+b_j,
+\quad
+q:=\frac{S_j-T_i}{D}.
+\]
+By \eqref{eq:2.1},
+\begin{equation}
+q=\frac{d+a_iu+b_jv}{D}.
+\label{eq:2.3}
+\end{equation}
+
+\begin{lemma}[Peano--hinge representation]
+\label{lem:hinge}
+Assume \(d>0\).  For \(t\in\R\) set
+\begin{equation}
+\begin{aligned}
+H_{ij}(t):={}&
+D(q-t)_+-a_i(u-t)_+-b_j(v-t)_+\\
+&-\bigl|\{x\in[\xi_i,\eta_j]:\gamma_n(x)>t\}\bigr|.
+\end{aligned}
+\label{eq:2.4}
+\end{equation}
+Then
+\begin{equation}
+\Gamma^{(n)}_{ij}
+=\int_{\R}L''(t)H_{ij}(t)\,dt,
+\label{eq:2.5}
+\end{equation}
+and
+\begin{equation}
+H_{ij}(t)\ge0\qquad\text{for all }t.
+\label{eq:2.6}
+\end{equation}
+For \(d<0\), set
+\[
+\xi'=-\xi_i,\qquad \eta'=-\eta_j,\qquad
+\widetilde\gamma(x)=-\gamma_n(-x).
+\]
+Keep the source coefficient \(a_i\) attached to \(\xi'\) and the target
+coefficient \(b_j\) attached to \(\eta'\).  Then
+\[
+d'=-d>0,\qquad u'=-u,\qquad v'=-v,\qquad q'=-q.
+\]
+The reflected gauged functional equals the original one because \(L\) is
+even and \(L'\) is odd.
+\end{lemma}
+
+\begin{proof}
+The linear functional in \(L\) defined by the right side of \eqref{eq:2.2}
+annihilates affine functions.  The standard Peano representation modulo
+affine functions therefore gives
+\[
+\mathcal T(L)=\int_{\R}L''(t)\,\mathcal T((\,\cdot-t\,)_+)\,dt
+\]
+for this functional \(\mathcal T\).  Evaluating
+\(\mathcal T((\,\cdot-t\,)_+)\) with \eqref{eq:2.3} gives exactly \(H_{ij}(t)\),
+and hence \eqref{eq:2.5}.
+
+It remains to prove \eqref{eq:2.6}.  Since
+\[
+|v-u|\le\lambda d,
+\]
+and \(a_i\le1,\ b_j\le2,\ \lambda<1/2\),
+\begin{equation}
+q-u=\frac{d+b_j(v-u)}D>0,\qquad
+q-v=\frac{d-a_i(v-u)}D>0.
+\label{eq:2.7}
+\end{equation}
+Moreover \(q\) lies above the whole graph segment.
+Indeed, if for some \(x=\xi_i+s\) both
+\(u+\lambda s>q\) and \(v+\lambda(d-s)>q\), then
+\[
+d>\frac{(q-u)+(q-v)}{\lambda}.
+\]
+But, with \(r=(v-u)/d\),
+\[
+\frac{(q-u)+(q-v)}d
+=\frac{2+(b_j-a_i)r}{a_i+b_j}
+\ge\frac{2-\lambda}{3}>\lambda,
+\]
+a contradiction.
+
+We prove nonnegativity by considering the possible positions of \(t\).
+If \(t<\min(u,v)\), the first three terms of \eqref{eq:2.4} equal \(d\), while
+the last term is at most \(d\).
+
+If \(u\le t<v\), they equal \(d-a_i(t-u)\), whereas the
+\(\lambda\)-Lipschitz constraint gives
+\[
+|\{\gamma_n>t\}|\le d-\frac{t-u}{\lambda},
+\]
+and \(a_i<1/\lambda\).  The case \(v\le t<u\) is identical, using
+\(b_j<1/\lambda\).
+
+If \(\max(u,v)\le t<q\), then
+\[
+D(q-t)_+=d-a_i(t-u)-b_j(t-v).
+\]
+If the graph rises above \(t\), it spends at least
+\((t-u)/\lambda\) before the first up-crossing and at least
+\((t-v)/\lambda\) after the last down-crossing.  Hence
+\[
+|\{\gamma_n>t\}|
+\le
+\left[d-\frac{t-u}{\lambda}-\frac{t-v}{\lambda}\right]_+,
+\]
+and again \(a_i,b_j<1/\lambda\).
+
+Finally, if \(t\ge q\), \eqref{eq:2.7}
+and the fact that \(q\) lies above the graph make every term in
+\eqref{eq:2.4} zero.  Thus \(H_{ij}\ge0\).
+\end{proof}
+
+Let \(Q(s):=s^2/2\), and write \(\Gamma^Q_{ij}\) for the same gauge
+functional with \(L\) replaced by \(Q\).  Lemma~\ref{lem:hinge} gives
+\begin{equation}
+\Gamma^Q_{ij}=\int_\R H_{ij}(t)\,dt.
+\label{eq:2.8}
+\end{equation}
+
+\begin{lemma}[Quadratic spacelike coercivity]
+\label{lem:quad}
+For every \(\lambda<1/2\) there are
+\(0<c_\lambda<C_\lambda<\infty\) such that
+\begin{equation}
+c_\lambda d^2\le \Gamma^Q_{ij}\le C_\lambda d^2.
+\label{eq:2.9}
+\end{equation}
+One may take
+\begin{equation}
+c_\lambda=
+\frac{(1-\lambda)(1-2\lambda)}{2(3-4\lambda)}.
+\label{eq:2.10}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For \(d>0\), put \(\Delta\gamma=v-u\) and \(r=\Delta\gamma/d\).
+A direct calculation yields
+\begin{equation}
+\Gamma^Q_{ij}
+=
+\frac{(d-a_i\Delta\gamma)(d+b_j\Delta\gamma)}{2D}
++
+\int_{\xi_i}^{\eta_j}
+\bigl(\operatorname{Chord}_{\xi_i,\eta_j}\gamma_n-\gamma_n\bigr)\,ds.
+\label{eq:2.11}
+\end{equation}
+Among \(\lambda\)-Lipschitz functions with endpoint slope \(r\), the
+largest possible area above the chord is
+\begin{equation}
+\frac{\lambda^2-r^2}{4\lambda}d^2.
+\label{eq:2.12}
+\end{equation}
+Indeed, after subtracting the chord, the deviation \(h\) satisfies
+\(h(0)=h(d)=0\) and its a.e. derivative lies in
+\([-\lambda-r,\lambda-r]\).  The maximal area is attained by the
+bang--bang tent with slope \(\lambda-r\) up to its peak and
+\(-(\lambda+r)\) afterwards.  Its peak height is
+\((\lambda^2-r^2)d/(2\lambda)\), and its triangular area is exactly
+\eqref{eq:2.12}.
+
+Next,
+\[
+\frac{(1-a r)(1+b r)}{2(a+b)}
+\]
+is decreasing in both \(a\) and \(b\), so its minimum over
+\(a\in[0,1], b\in[1,2]\) occurs at \(a=1,b=2\).
+Therefore
+\[
+\frac{\Gamma^Q_{ij}}{d^2}
+\ge
+\frac{(1-r)(1+2r)}6
+-\frac{\lambda^2-r^2}{4\lambda}.
+\]
+The right side is minimized on \([-\lambda,\lambda]\) at
+\(r=-\lambda/(3-4\lambda)\), giving \eqref{eq:2.10}.  The upper bound follows
+immediately from \eqref{eq:2.11}, \(|r|\le\lambda\), and
+\(|\int(\operatorname{Chord}\gamma_n-\gamma_n)|\le \lambda d^2/2\).
+
+For \(d<0\), the same estimate follows from
+\(x\mapsto-x\), \(\widetilde\gamma(x)=-\gamma_n(-x)\), and the evenness
+of the quadratic cost.
+\end{proof}
+
+\begin{lemma}[Euclidean coercivity]
+\label{lem:euclid-coerc}
+On the event \(\|\gamma_n\|_\infty\le1\),
+\begin{equation}
+2^{-3/2}c_\lambda d^2
+\le
+\Gamma^{(n)}_{ij}
+\le
+C_\lambda d^2
+\qquad\text{for every }i,j.
+\label{eq:2.13}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For the Euclidean \(L\),
+\[
+L''(t)=(1+t^2)^{-3/2}.
+\]
+The support of the nonnegative kernel in Lemma~\ref{lem:hinge} lies
+between the graph values and \(q\).  Here
+\[
+|q|=\left|\frac{S_j-T_i}{D}\right|\le1,
+\qquad
+|u|,|v|\le1.
+\]
+Hence \(2^{-3/2}\le L''\le1\) on the support.  Combining
+\eqref{eq:2.5}, \eqref{eq:2.8}, and Lemma~\ref{lem:quad} proves \eqref{eq:2.13}.
+\end{proof}
+
+\begin{theorem}[Localization of the Euclidean optimizer]
+\label{thm:fgl2}
+Let \(\sigma_n\) be the exact Euclidean optimal permutation.  Then, for every \(\varepsilon>0\), the corresponding auxiliary
+feedback graph satisfies
+\begin{equation}
+\boxed{
+\Pp\left\{
+\sum_{i=1}^n
+\bigl|\widehat\eta_{\sigma_n(i)}-\widehat\xi_i\bigr|^2
+\le C_\varepsilon n
+\right\}
+\ge1-\varepsilon-o(1).
+}
+\label{eq:2.14}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Fix \(\varepsilon>0\) and allocate fixed fractions of this tolerance to
+Theorem~\ref{thm:I3} and Corollary~\ref{cor:I4}.  On the intersection
+of their good events,
+\(\|\gamma_n\|_\infty\le1\) for all large \(n\), and the optimizer
+property together with the row/column gauge gives
+\[
+\sum_i\Gamma^{(n)}_{i,\sigma_n(i)}
+\le
+\sum_i\Gamma^{(n)}_{i,\tau_n^g(i)}.
+\]
+Apply Lemma~\ref{lem:euclid-coerc} and multiply by \(n^2\):
+\[
+2^{-3/2}c_\lambda
+\sum_i|\widehat\eta_{\sigma_n(i)}-\widehat\xi_i|^2
+\le
+C_\lambda
+\sum_i|\widehat\eta_{\tau_n^g(i)}-\widehat\xi_i|^2.
+\]
+Theorem~\ref{thm:I3} then yields \eqref{eq:2.14} after adding the allocated
+failure probabilities.
+
+\end{proof}
+
+\paragraph{Joint high-probability event.}
+For each outer tolerance \(\varepsilon\), apply the preceding
+estimates with a fixed finite subdivision of \(\varepsilon\), and let
+\(\mathcal G_{n,\varepsilon}\) denote their intersection, including the
+energy event
+\begin{equation}
+\frac1n\sum_i
+|\widehat\eta_{\sigma_n(i)}-\widehat\xi_i|^2\le C_\varepsilon.
+\label{eq:2.17}
+\end{equation}
+After relabeling the total tolerance,
+\begin{equation}
+\Pp(\mathcal G_{n,\varepsilon})\ge1-\varepsilon-o(1).
+\label{eq:2.18}
+\end{equation}
+\section{Stationary feedback environment}
+\label{sec:environment}
+
+We identify the local environment seen from a uniformly chosen point
+in the bulk.  Spatial averaging turns the finite martingale identities
+into a stationary marked process.
+
+For fixed \(\varepsilon>0\), choose a deterministic sequence
+\(h_{n,\varepsilon}\to\infty\),
+\(h_{n,\varepsilon}=o(n)\), with
+\(h_{n,\varepsilon}\ge 2B_n\), such that
+\begin{equation}
+\Pp\!\left(
+\mathcal G_{n,\varepsilon}\cap
+\left\{\|g_{n,\varepsilon}\|_\infty>
+\frac{h_{n,\varepsilon}}4\right\}
+\right)\longrightarrow0.
+\label{eq:3.0}
+\end{equation}
+Corollary~\ref{cor:I4} ensures this choice.  Set
+\[
+I_{n,\varepsilon}:=[h_{n,\varepsilon},n-h_{n,\varepsilon}].
+\]
+Let \(Z_n\) be uniform on \(I_{n,\varepsilon}\), independently conditional on the finite
+sample.  Recenter the feedback scene at \(Z_n\), and normalize the graph
+height by
+\[
+(\theta_{Z_n}g_n)(x):=g_n(Z_n+x)-g_n(Z_n).
+\]
+
+At fixed \(\varepsilon\), write \(I_n:=I_{n,\varepsilon}\) and
+\(\mathbf Q_n^{\rm env}\) temporarily for
+\(\mathbf Q_{n,\varepsilon}^{\rm env}\) inside local calculations.
+Define the random empirical environment law
+\begin{equation}
+\mathbf Q_n^{\rm env}
+:=
+\frac1{|I_n|}\int_{I_n}\delta_{\theta_x\omega_n^{\rm env}}\,dx.
+\label{eq:3.0a}
+\end{equation}
+
+\begin{lemma}[Spatial martingale closure]
+\label{lem:spatial-mp}
+Let \(G\) be a bounded local functional depending only on the rooted
+past window \([-R,0]\), let \(f:\mathbb Z\to\mathbb R\) have finite
+support, and let \(t>0\).  Write
+\[
+\Psi_{f,t}(\omega)
+=
+f(K(t))-f(K(0))-\int_0^t\mathcal Lf(K(s-))\,ds,
+\]
+where
+\[
+\mathcal Lf(k)
+=b_k[f(k+1)-f(k)]+d_k[f(k-1)-f(k)].
+\]
+Then, for every \(\delta>0\),
+\begin{equation}
+\Pp\left(
+\mathcal G_{n,\varepsilon}\cap
+\left\{\left|\int G\,\Psi_{f,t}\,d\mathbf Q_{n,\varepsilon}^{\rm env}\right|>\delta\right\}
+\right)\longrightarrow0.
+\label{eq:3.0b}
+\end{equation}
+The analogous assertions hold for the two marked martingale residuals
+with bounded mark tests \(h_-\) and \(h_+\).
+\end{lemma}
+
+\begin{proof}
+Fix \(\varepsilon>0\), and let \(\tau_{n,\varepsilon}\) be the stopping
+coordinate in the feedback construction.  Use the compensated current
+martingale stopped at \(\tau_{n,\varepsilon}\), denoted
+\(M_{n,\tau}^f\).  Since \(h_{n,\varepsilon}\ge2B_n\), every fixed
+past and future observation window rooted in \(I_n\) lies inside the
+bulk for all sufficiently large \(n\).  For these roots put
+\begin{equation}
+X_x:=G(\theta_x\omega_n)
+[M_{n,\tau}^f(x+t)-M_{n,\tau}^f(x)].
+\label{eq:3.0c}
+\end{equation}
+If \(x+t\le y\), then \(X_xG(\theta_y\omega_n)\) is measurable
+at time \(y\), so the martingale property gives \(\E X_xX_y=0\).
+The same holds when \(y+t\le x\).  Bounded \(f,G\) and bounded
+stopped rates give \(\E X_x^2\le C_{f,G,t}\) uniformly in \(x,n\).
+Ordinary Fubini and Cauchy--Schwarz therefore give
+\begin{equation}
+\E\left|\frac1{|I_n|}\int X_x\,dx\right|^2
+\le\frac{C_{f,G,t}}{|I_n|^2}
+\iint_{I_n^2}\mathbf1_{\{|x-y|<t\}}\,dx\,dy
+\le\frac{2tC_{f,G,t}}{|I_n|}\longrightarrow0.
+\label{eq:3.0d}
+\end{equation}
+On \(\mathcal G_{n,\varepsilon}\), the stopping coordinate is the right
+bulk endpoint, so the stopped increment equals the desired feedback
+martingale increment on every admissible rooted window.
+
+The finite generator also differs from \(\mathcal L\) by uniformly
+\(o(1)\) on this event.  To obtain this estimate at the fixed stopping tolerance,
+put \(q_n=\log n/(13B_n/16)\) and
+\(\eta_n=2\cdot33280(\sqrt{q_n}+q_n)\).  Then \(\eta_n\to0\), and
+\[
+4(33280)^2\log n\le\eta_n^2(13B_n/16),\qquad
+2\cdot33280\log n\le\eta_n(13B_n/16).
+\]
+The same VC good event therefore controls residual densities by
+\(|r_\pm-1|\le\eta_n\) throughout the surviving bulk.  A mark test
+bounded by \(C\) has drift-integral error at most \(2Ct\eta_n\).
+Chebyshev's inequality gives \eqref{eq:3.0b}.
+
+The marked assertions use the same orthogonality argument;
+bounded marks and stopped rates bound the second moments of their
+fixed-window compensated jump counts.  All martingale estimates are
+taken under the original sample law, and then restricted to
+\(\mathcal G_{n,\varepsilon}\).
+\end{proof}
+
+\begin{lemma}[Marked feedback martingale problem]
+\label{lem:marked-mp}
+Consider a marked càdlàg process whose current takes values in
+\(\mathbb Z\).  For every finitely supported \(f:\mathbb Z\to\mathbb R\)
+and bounded continuous \(h_-,h_+:[0,1]\to\mathbb R\), require the processes
+\begin{equation}
+\begin{aligned}
+M_f(t):={}&f(K(t))-f(K(0))\\
+&-\int_0^t\Bigl[
+b_{K(s-)}(f(K(s-)+1)-f(K(s-)))\\
+&\hspace{24mm}
++d_{K(s-)}(f(K(s-)-1)-f(K(s-)))
+\Bigr]\,ds
+\end{aligned}
+\label{eq:3.MP1}
+\end{equation}
+and
+\begin{equation}
+M_-(t)
+:=
+\sum_{\substack{0<s\le t\\ \Delta K(s)=+1}}h_-(U_s)
+-
+\int_0^t\int_0^1
+h_-(u)[1-\lambda\sgn K(s-)(1-u)]\,du\,ds,
+\label{eq:3.MP2}
+\end{equation}
+\begin{equation}
+M_+(t)
+:=
+\sum_{\substack{0<s\le t\\ \Delta K(s)=-1}}h_+(V_s)
+-
+\int_0^t\int_0^1
+h_+(v)[1+\lambda\sgn K(s-)(1+v)]\,dv\,ds
+\label{eq:3.MP3}
+\end{equation}
+are martingales, where
+\[
+b_k=1-\frac{\lambda}{2}\sgn k,\qquad
+d_k=1+\frac{3\lambda}{2}\sgn k.
+\]
+This marked martingale problem is nonexplosive and uniquely determines
+the marked feedback path once the law of \(K(0)\) is specified.
+\end{lemma}
+
+\begin{proof}
+Let \(\tau\) be the first future event.  Conditional on the entire
+initial past and \(K(0)=k\), stop the compensators before \(\tau\).
+The survival equation and the two marked identities give, with
+\(q_k=b_k+d_k\),
+\[
+\begin{aligned}
+\Pp\{\tau\in dt,\ {-}\text{ event},\ U\in du\mid\mathcal F_0\}
+ &=e^{-q_kt}[1-\lambda\sgn(k)(1-u)]\,dt\,du,\\
+\Pp\{\tau\in dt,\ {+}\text{ event},\ V\in dv\mid\mathcal F_0\}
+ &=e^{-q_kt}[1+\lambda\sgn(k)(1+v)]\,dt\,dv.
+\end{aligned}
+\]
+Optional sampling gives the same conditional kernel after each event.
+The bound \(0<2-\lambda\le q_k\le2+\lambda\) excludes explosion and
+ensures each next waiting time is finite.  Iterating these conditional
+holding, colour and mark kernels determines all finite histories and
+hence the entire future path, given the initial current law.
+\end{proof}
+
+\begin{lemma}[Deterministic sample selection on good events]
+\label{lem:good-sample-extraction}
+Fix \(\varepsilon>0\).  Suppose events
+\(E_n\subset\mathcal G_{n,\varepsilon}\) have probability at least
+\(p>0\) along a subsequence.  One can select samples from these
+events and a further increasing subsequence so that all countably many
+fixed-window spatial martingale residuals vanish, local count second
+moments are uniformly bounded on each fixed window, and every weak
+limit has no simultaneous two-colour events.  The root-current
+moment bound and every additional finite collection of errors tending
+to zero in good-event probability may be imposed simultaneously.
+\end{lemma}
+
+\begin{proof}
+For integer \(R\ge1\), let \(N_R\) count both colours in \([-R,R]\)
+and put \(V_{n,R}=\int N_R^2\,d\mathbf Q_n^{\rm env}\).
+Integrating the stopped count estimates over the root gives
+\(\E[\mathbf1_{\mathcal G_{n,\varepsilon}}V_{n,R}]
+\le C_{\varepsilon,R}\) for each fixed \(R\) and all sufficiently
+large \(n\).  Choose \(K_R\) so that
+\(C_{\varepsilon,R}/K_R\le p2^{-R-4}\).
+Markov's inequality then bounds the probability of each good-event
+failure \(V_{n,R}>K_R\) by \(p2^{-R-4}\).
+
+For the collision constraints, cover \([-R,R]\) by overlapping open
+windows of length \(O(\delta_{R,l})\).  The two-colour stopped factorial
+moment bound gives probability at most \(36\Delta^2\) for two events
+in a window of length \(\Delta\).  The expected sum of empirical
+collision masses over the grid is consequently at most
+\(C_R\delta_{R,l}\).  Require that sum to be at most
+\(\sqrt{\delta_{R,l}}\), choosing the meshes to decrease to zero and
+satisfy \(\sum_{R,l}C_R\sqrt{\delta_{R,l}}<p/8\).
+The same good-event indicator controls the sum over all windows.
+
+For each grid, the condition that every supported continuous test
+\(0\le f\le1\) has total two-colour mass at most one is closed in
+the vague topology.  Portmanteau passes these grid bounds to a weak
+limit.  Letting \(l\to\infty\), and then taking the countable union
+over \(R\), excludes both multiplicities and cross-colour collisions.
+
+Enumerate the spatial residuals as \(R_{n,j}\).  At step \(m\), choose
+\(n_m\) sufficiently large that the preceding estimates for the
+first \(m\) constraints apply and the total failure probability of
+\(|R_{n_m,j}|\le1/m\), \(j\le m\), is below \(p/8\).
+Impose also the first \(m\) requested vanishing-error bounds.
+Their combined loss can be made smaller than \(p\), leaving a sample
+in \(E_{n_m}\).  Each step imposes a finite prefix of the constraints,
+and every required observation window eventually fits inside the bulk.
+For every fixed constraint the resulting sequence satisfies it on a tail.
+
+The root-current bound follows directly from the localization estimate.
+For a finite permutation, current equals signed crossing count, so with
+\(d_i=|\widehat\eta_{\sigma_n(i)}-\widehat\xi_i|\),
+\[
+\int |K(0)|\,d\mathbf Q_n^{\rm env}
+ \le \frac1{|I_n|}\sum_i d_i
+ \le \frac{n+\sum_i d_i^2}{2|I_n|}
+ \le \frac{n(1+C_\varepsilon)}{2|I_n|}.
+\]
+This gives tightness of the integer root current on every selected
+sample, directly from \eqref{eq:2.17}.  Together with the local count bounds,
+compact marks and the \(\lambda\)-Lipschitz normalized graphs, it
+proves tightness of the environment laws.  The local second-moment
+bounds give uniform integrability of all fixed-window counts.
+\end{proof}
+
+\begin{theorem}[The stationary feedback limit]
+\label{thm:env}
+Let \(\mathbf Q_{n,\varepsilon}^{\rm env}\) be the empirical environment
+law generated by the feedback graph associated with the outer tolerance
+\(\varepsilon\).  Then, for every compatible metric \(d_{\rm loc}\) on
+local environment laws and every \(\delta>0\),
+\begin{equation}
+\boxed{
+\lim_{\varepsilon\downarrow0}
+\limsup_{n\to\infty}
+\Pp\left\{
+d_{\rm loc}\bigl(
+\mathbf Q_{n,\varepsilon}^{\rm env},\cF_\lambda
+\bigr)>\delta
+\right\}=0.
+}
+\label{eq:3.0e}
+\end{equation}
+where \(\cF_\lambda\) is the unique two-sided stationary marked feedback
+law described below.  Its current
+\(K(x)\in\mathbb Z\) is the birth--death chain
+\[
+k\to k+1
+\quad\text{at rate}\quad
+b_k:=1-\frac{\lambda}{2}\sgn k,
+\]
+\begin{equation}
+k\to k-1
+\quad\text{at rate}\quad
+d_k:=1+\frac{3\lambda}{2}\sgn k.
+\label{eq:3.1}
+\end{equation}
+Conditional on \(K(x-)=k\), a \(+1\) jump carries a source mark with
+intensity
+\begin{equation}
+[1-\lambda\sgn(k)(1-u)]\,du,
+\label{eq:3.2}
+\end{equation}
+and a \(-1\) jump carries a target mark with intensity
+\begin{equation}
+[1+\lambda\sgn(k)(1+v)]\,dv.
+\label{eq:3.3}
+\end{equation}
+The graph cocycle is
+\begin{equation}
+g(y)-g(x)=\int_x^y\lambda\sgn K(s)\,ds.
+\label{eq:3.4}
+\end{equation}
+The invariant current law is
+\begin{equation}
+\varpi_0=\frac{\lambda}{1+\lambda},
+\label{eq:3.5}
+\end{equation}
+\begin{equation}
+\varpi_k=
+\frac{\varpi_0}{1+3\lambda/2}
+\left(\frac{1-\lambda/2}{1+3\lambda/2}\right)^{k-1},
+\qquad k\ge1,
+\label{eq:3.6}
+\end{equation}
+\begin{equation}
+\varpi_{-k}=
+\frac{\varpi_0}{1+\lambda/2}
+\left(\frac{1-3\lambda/2}{1+\lambda/2}\right)^{k-1},
+\qquad k\ge1.
+\label{eq:3.7}
+\end{equation}
+In particular,
+\begin{equation}
+\E_\varpi[\sgn K]=0,
+\label{eq:3.8}
+\end{equation}
+and the stationary source and target mark intensities are exactly
+\begin{equation}
+du,\qquad dv.
+\label{eq:3.9}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Fix \(\varepsilon>0\).  If good-event convergence to
+\(\cF_\lambda\) failed, there would be a subsequence and events
+\[
+E_n=\mathcal G_{n,\varepsilon}\cap
+ \{d_{\rm loc}(\mathbf Q_{n,\varepsilon}^{\rm env},\cF_\lambda)>\delta\}
+\]
+of probability at least \(p>0\).  Apply
+Lemma~\ref{lem:good-sample-extraction} inside these events.  It gives a
+deterministic sequence of empirical laws with a weakly
+convergent subsequence, denoted \(Q_n\Rightarrow Q\), while retaining
+the deviation and all the residual, count-moment and collision bounds.
+Here \(\varepsilon,p\) are fixed before any moment cutoff is chosen.
+
+\emph{Fixed cuts and stationarity.}
+Write \(L_n=|I_n|\).  Uniform rooting and Fubini give, for either colour,
+any fixed \(x\in\R\) and \(r>0\),
+\[
+\int N([x-r,x+r])\,dQ_n\le 2r\frac n{L_n}.
+\]
+Take a continuous compactly supported test equal to one on the marked
+fibre above \(x\), supported in this interval, and bounded by one.
+Its counting integral is a nonnegative continuous vague observable.
+Bounded truncation and Portmanteau pass the upper moment bound to
+\(Q\).  Since \(n/L_n\) is bounded, letting \(r\downarrow0\) proves
+that the fixed cut \(x\) has no event \(Q\)-almost surely.
+This conclusion holds separately for each fixed \(x\).
+
+For a fixed shift \(h\), rerooting is continuous when cuts \(0,h\)
+are vacant.  The exact finite-root estimate
+\[
+|Q_n(F\circ\theta_h)-Q_n(F)|
+ \le 2\|F\|_\infty |h|/L_n
+\]
+therefore passes to the limit and proves stationarity of \(Q\).
+
+\emph{The full marked martingale problem.}
+Choose a countable algebra of bounded environment-past cylinders,
+generated by continuous marked-count tests in rational past windows
+and the integer root current.  The observation filtration consists of
+the initial current and the subsequently revealed two-colour counts.
+Use a countable uniformly dense family of continuous mark tests,
+current tests \(\mathbf1_{\{k\}}\), and rational time intervals.
+These cylinders depend on the revealed environment past and are
+measurable in the original filtration.
+The selected samples satisfy all their residual identities asymptotically
+by Lemma~\ref{lem:spatial-mp}.
+
+Simplicity and vacancy of deterministic endpoints imply continuity of
+each residual observable \(Q\)-almost everywhere.  A fixed residual
+is bounded by \(C(1+N_R)\) for some finite \(R\).
+The selected bounds \(\int N_R^2\,dQ_n\le K_R\) give uniform
+integrability, so its expectation converges and the limiting residual
+has expectation zero.
+
+For a fixed rational interval, the residual
+defines a finite signed measure on the past sigma-field.  It vanishes
+against the generating cylinder algebra, hence against every bounded
+past-measurable function by the monotone-class theorem.  Increasing the
+past window recovers the entire past.
+
+The error from uniformly approximating a mark test is bounded in \(L^1\) by
+the uniform approximation error times \(\E_QN_R+CR\).
+Right continuity and the same second-moment bound extend rational times
+to all real times.  Thus the marked compensators are martingales;
+their \(L^1\) right continuity also permits usual augmentation.
+
+\emph{The invariant current and two-sided points.}
+Stationarity and the current indicator identities give the balance
+equations for \(p_k=Q\{K(0)=k\}\).
+The probability flux \(p_kb_k-p_{k+1}d_{k+1}\) is constant in \(k\).
+Since \(p_k\to0\) and the rates are bounded, this constant is zero.
+The resulting detailed balance gives \eqref{eq:3.6}--\eqref{eq:3.7}, and normalization
+gives \eqref{eq:3.5} and \eqref{eq:3.8}.
+
+Lemma~\ref{lem:marked-mp} now identifies the
+joint law of \(K(0)\) and both complete marked configurations on
+\((0,\infty)\).  By stationarity, shift any finite window into this
+positive half-line and recover its current by signed event counts.
+Increasing the windows identifies the joint law of the root current
+and both full two-sided configurations with that of \(\cF_\lambda\).
+
+\emph{The original graph.}
+The finite recursive curve has right derivative
+\(\lambda\sgn K_n\) on every surviving bulk segment, including the
+post-event right neighbourhood.  The fundamental theorem of calculus
+therefore gives the exact original-graph identity
+\[
+g_n(B_n+t)-g_n(B_n+s)
+ =\int_s^t\lambda\sgn K_n(B_n+u)\,du,
+ \qquad 0\le s\le t\le n-2B_n.
+\]
+Every fixed rooted window is eventually in this range.  For each
+rational \(q\), the bounded residual
+\[
+\min\left\{1,\left|g(q)-\int_0^q\lambda\sgn K(s)\,ds\right|\right\}
+\]
+is continuous at every scene with vacant root cut.  Indeed, on a
+compact interval the current stabilizes locally away from its event
+coordinates; a small open neighbourhood of those coordinates has
+arbitrarily small Lebesgue measure, while the velocity is bounded by
+\(\lambda\).  This proves continuity of the integral observable.
+
+The finite residual is identically zero for all sufficiently large
+\(n\); the almost-everywhere continuous mapping theorem therefore
+makes it zero \(Q\)-almost surely.  Intersect the resulting full-measure
+sets over rational \(q\), then use continuity of both primitives to
+obtain \eqref{eq:3.4} for all endpoints.
+Thus the normalized graph is a measurable function of the identified
+current and point configurations.  The whole law \(Q\) equals
+\(\cF_\lambda\), contradicting the retained deviation.
+
+We have proved, for each fixed \(\varepsilon,\delta>0\),
+\begin{equation}
+\Pp\bigl(\mathcal G_{n,\varepsilon}\cap
+ \{d_{\rm loc}(\mathbf Q_{n,\varepsilon}^{\rm env},\cF_\lambda)>\delta\}\bigr)
+ \longrightarrow0.
+\label{eq:3.9a}
+\end{equation}
+Adding the probability of \(\mathcal G_{n,\varepsilon}^c\) yields a limiting failure
+probability at most \(\varepsilon\).  We then let
+\(\varepsilon\downarrow0\).  Averaging the identified marked
+intensities and using \eqref{eq:3.8} gives \eqref{eq:3.9}.
+\end{proof}
+
+\begin{corollary}[Local limiting feedback cost]
+\label{cor:limit-cost}
+Normalize \(g(0)=0\).  If a source event is \((\xi,u)\), a target event
+is \((\eta,v)\), and
+\[
+a=1-u,\qquad b=1+v,\qquad D=a+b,\qquad d=\eta-\xi,
+\]
+then the rescaled finite gauged costs converge uniformly on bounded
+rooted configurations to
+\begin{equation}
+\boxed{
+\begin{aligned}
+\mathfrak c_\lambda((\xi,u),(\eta,v))
+={}&
+\frac{d^2}{2D}
+-\frac{ab}{2D}\bigl(g(\eta)-g(\xi)\bigr)^2\\
+&+
+d\,\frac{ag(\xi)+bg(\eta)}D
+-\int_\xi^\eta g(s)\,ds .
+\end{aligned}}
+\label{eq:3.10}
+\end{equation}
+Moreover
+\begin{equation}
+c_\lambda' d^2\le \mathfrak c_\lambda\le C_\lambda' d^2.
+\label{eq:3.11}
+\end{equation}
+\end{corollary}
+
+\begin{proof}
+On a fixed rank-scale rooted window,
+along every good-event subsequential limit, the normalized graph height at the root
+tends to zero by Corollary~\ref{cor:I4},
+while graph increments and rank displacements are \(O(1)\).
+
+Apply the exact gauge decomposition of Section~\ref{sec:localization} and Taylor-expand only
+the curvature coefficient:
+\(L''(o(1))\to1\).
+After multiplication by \(n^2\), the affine and common-height terms
+cancel through the gauge, and the remaining quadratic expression is
+exactly \eqref{eq:3.10}.  Uniformity on compact rooted configurations follows from
+the uniform continuity of \(L''\) near zero and the \(\lambda\)-Lipschitz
+bound.  The coercivity is the rank-scale form of
+Lemmas~\ref{lem:quad}--\ref{lem:euclid-coerc}.
+\end{proof}
+
+\section{Compactness of selected matchings}
+\label{sec:compactness}
+
+Let \(\mathcal G_{\lambda,2}^0\) be the class of all stationary perfect
+locally minimizing zero-relative-flux matching laws \(\Sigma\) over
+\(\cF_\lambda\) whose source Palm law has finite feedback-edge second
+moment,
+\begin{equation}
+\int d_0^2\,d\Sigma^-<\infty.
+\label{eq:4.0E}
+\end{equation}
+This is exactly the class reached by the compactness theorem below,
+because Lemma~\ref{lem:palm-l2} transfers the localization bound \eqref{eq:2.17}.
+
+Throughout the local lemmas in this section, \(\varepsilon>0\) is fixed.
+Whenever a good-event failure has probability bounded away from zero,
+Lemma~\ref{lem:good-sample-extraction} selects deterministic samples
+with the required moment and residual bounds.  The local
+limits below are taken along these selected sequences.  We use the same
+selection to recover mark averages over the full sample and over
+macroscopic blocks.
+
+For \(\Sigma\in\mathcal G_{\lambda,2}^0\), let
+\[
+\kappa[\Sigma]
+:=
+\operatorname{Law}_{\text{source Palm}}(U_0,V_{\Sigma(0)}).
+\]
+
+\begin{lemma}[Bulk intersection count]
+\label{lem:bulk-count}
+At fixed \(\varepsilon\), with \(I_n:=I_{n,\varepsilon}\), for every
+\(\delta>0\),
+\begin{equation}
+\Pp\left(
+\mathcal G_{n,\varepsilon}\cap
+\left\{\frac1n\#\{i:\widehat\xi_i\notin I_n\}>\delta\right\}
+\right)\to0,
+\label{eq:4.0}
+\end{equation}
+and the same statement holds for targets.  Hence the source- and
+target-intersection intensities converge to one along every
+positive-probability good-event subsequence.
+\end{lemma}
+
+\begin{proof}
+On \(\mathcal G_{n,\varepsilon}\) outside the \(o(1)\) event in \eqref{eq:3.0},
+\[
+|\widehat\xi_i-nT_i|
+=
+a_i|g_n(\widehat\xi_i)|
+\le \frac{h_{n,\varepsilon}}{4},
+\]
+and
+\[
+|\widehat\eta_j-nS_j|
+=
+b_j|g_n(\widehat\eta_j)|
+\le \frac{h_{n,\varepsilon}}{2}.
+\]
+Hence a source with
+\[
+T_i\in\left[\frac{2h_{n,\varepsilon}}{n},1-\frac{2h_{n,\varepsilon}}{n}\right]
+\]
+must satisfy \(\widehat\xi_i\in I_n\), and the analogous statement holds
+for targets.  Therefore the excluded source and target counts are bounded
+by the numbers of \(T_i\)'s and \(S_j\)'s in physical boundary layers of
+total width \(4h_{n,\varepsilon}/n=o(1)\).  Their expectations are \(O(h_{n,\varepsilon})=o(n)\);
+Markov's inequality gives \eqref{eq:4.0}.
+\end{proof}
+
+Let \(\omega_n\) denote the finite feedback environment together with the
+optimal matching \(\sigma_n\).  Define its empirical Lebesgue-rooted scene law
+\begin{equation}
+\mathbf Q_n
+:=
+\frac1{|I_n|}
+\int_{I_n}\delta_{\theta_x\omega_n}\,dx.
+\label{eq:4.1}
+\end{equation}
+At fixed \(\varepsilon\), this is the abbreviation
+\(\mathbf Q_n=\mathbf Q_{n,\varepsilon}\); similarly
+\(\omega_n=\omega_{n,\varepsilon}\) and \(I_n=I_{n,\varepsilon}\)
+in the local lemmas below.
+A rooted scene records the two marked point measures, the marked edge
+measure, the graph cocycle normalized by \(g(0)=0\), and the integer
+root current \(K(0)\). The three point measures carry their vague
+topologies, the graph carries the local uniform topology, and
+\(K(0)\in\mathbb Z\) carries the discrete topology. The current at
+other coordinates is recovered from \(K(0)\) and the signed counts of
+source and target events between the root and that coordinate.
+
+For a source event \(i\), write
+\[
+d_i:=|\widehat\eta_{\sigma_n(i)}-\widehat\xi_i|.
+\]
+
+\begin{lemma}[No loss of partners]
+\label{lem:no-loss}
+Fix the outer tolerance \(\varepsilon>0\).  For every \(\delta>0\),
+\begin{equation}
+\lim_{R\to\infty}\limsup_{n\to\infty}
+\Pp\left(
+\mathcal G_{n,\varepsilon}\cap
+\left\{\frac1n\#\{i:d_i>R\}>\delta\right\}
+\right)=0.
+\label{eq:4.2}
+\end{equation}
+The same holds when rooted from target endpoints.  Consequently no
+partner is lost in any positive-probability good-event subsequential
+limit.
+\end{lemma}
+
+\begin{proof}
+Put
+\[
+Z_n:=\frac1n\sum_i d_i^2.
+\]
+By the energy bound \eqref{eq:2.17}, on \(\mathcal G_{n,\varepsilon}\) one has
+\(Z_n\le C_\varepsilon\) outside an \(o(1)\) event.  Since
+\[
+\frac1n\#\{i:d_i>R\}\le\frac{Z_n}{R^2},
+\]
+\eqref{eq:4.2} follows.  The same edge set, viewed from target endpoints, gives
+the target statement.
+\end{proof}
+
+
+\begin{lemma}[Projective Palm readout]
+\label{lem:palm}
+Let fixed-sample rooted matching laws \(Q_m\), with root intervals
+\(A_m=(a_m,b_m]\) and lengths \(L_m\), converge weakly to a stationary
+perfect matching law \(Q\) with environment \(\cF_\lambda\).
+Suppose the source count in \(A_m\), divided by \(L_m\), tends to one,
+and the source count within distance one of its two endpoints,
+divided by \(L_m\), tends to zero.  Then for every continuous mark test
+\(f:[0,1]^2\to\R\),
+\begin{equation}
+\frac1{L_m}\sum_{\widehat\xi_i\in A_m}
+ f(U_i,V_{\sigma_m(i)})\longrightarrow\int f\,d\kappa[Q].
+\label{eq:4.8}
+\end{equation}
+These two count assumptions follow from Corollary~\ref{cor:I4} and the uniform height
+empirical-distribution bound for both \(A_m=I_m\) and fixed
+macroscopic blocks \(A_m=n_mJ\Subset(0,n_m)\).
+\end{lemma}
+
+\begin{proof}
+Choose \(\varphi\ge0\), continuous, supported in \([-1,1]\), with
+\(\int\varphi=1\), and set
+\(W_m(x)=\int_{A_m}\varphi(x-z)\,dz\).
+Fubini gives the exact identity
+\[
+\int\sum_{(x,u;y,v)\in\mathrm{edges}}
+ \varphi(x)f(u,v)\,dQ_m
+ =\frac1{L_m}\sum_i W_m(\widehat\xi_i)f(U_i,V_{\sigma_m(i)}).
+\]
+Since \(0\le W_m\le1\), its difference from the block sum is bounded
+by \(\|f\|_\infty\) times the normalized endpoint-strip source count.
+
+First take \(0\le f\le1\).  Multiply the edge test by continuous
+compact cutoffs in both endpoint positions, increasing to one.
+The corresponding nonnegative continuous vague observables and
+Portmanteau, followed by monotone convergence, give
+\[
+\int f\,d\kappa[Q]\le
+\liminf_m\frac1{L_m}\sum_i W_m(\widehat\xi_i)f(U_i,V_{\sigma_m(i)}).
+\]
+Campbell's formula identifies the limiting integral.  Perfectness
+identifies the test \(f=1\) with the source statistic, whose finite
+mass tends to one by the two count assumptions.  Applying the same
+lower bound to \(1-f\) gives the reverse upper bound.  Shifting and
+scaling proves the assertion for every continuous real \(f\).
+
+To verify the two count assumptions, put
+\(\zeta_m=\|g_m\|_\infty/n_m\) and
+\(\Delta_m=\sup_{t\in[0,1]}|F_m(t)-t|\), where \(F_m\) is the
+empirical source-height distribution.  The original intersection
+equation gives \(|\widehat\xi_i/n_m-T_i|\le\zeta_m\).
+Consequently each block count differs from its physical interval mass
+by \(O(n_m\zeta_m+n_m\Delta_m+1)\), and the two endpoint strips
+contain at most \(O(n_m\zeta_m+n_m\Delta_m+1)\) sources.
+Corollary~\ref{cor:I4} and the VC bound give \(\zeta_m,\Delta_m\to0\) on the selected
+samples.  Since \(L_m/n_m\) tends to a positive constant, both
+required normalized conclusions follow.
+\end{proof}
+
+\begin{lemma}[Inherited source-Palm second moment]
+\label{lem:palm-l2}
+Let \(\mathbf Q\) be any positive-probability good-event subsequential
+scene-law limit at fixed \(\varepsilon\).  Then its source Palm law satisfies
+\begin{equation}
+\boxed{\int d_0^2\,d\mathbf Q^-<\infty.}
+\label{eq:4.12}
+\end{equation}
+More precisely, the deterministic localization bound on the selected samples gives
+\begin{equation}
+\int d_0^2\,d\mathbf Q^-\le C_\varepsilon.
+\label{eq:4.13}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Work along the selected deterministic subsequence, where
+\(Z_n=n^{-1}\sum_i d_i^2\le C_\varepsilon\).  Choose a nonnegative
+continuous \(\varphi\), supported in \([-1,1]\), with integral one,
+and continuous cutoffs \(\chi_R(d)\uparrow1\), supported where
+\(d\le R+1\).  The edge statistic
+\[
+H_R(\omega)=\sum_{(x,u;y,v)\in\mathrm{edges}}
+ \varphi(x)|y-x|^2\chi_R(|y-x|)
+\]
+is a nonnegative continuous vague observable.  Exact Fubini and
+\(0\le\int_{I_n}\varphi(\widehat\xi_i-z)\,dz\le1\) give
+\(\int H_R\,dQ_n\le(n/|I_n|)Z_n\).
+Portmanteau and Campbell's formula imply
+\[
+\int d_0^2\chi_R(d_0)\,dQ^-
+ =\int H_R\,dQ\le C_\varepsilon.
+\]
+Monotone convergence as \(R\to\infty\) proves \eqref{eq:4.13}.
+For roots in \(nJ\), the bound is \(C_\varepsilon/|J|\), still finite.
+\end{proof}
+
+\begin{lemma}[Finite crossing number by Campbell mass transport]
+\label{lem:finite-crossings}
+Let
+\[
+N_{\rm cross}(0)
+=
+\#\{\text{selected edges crossing }0\}.
+\]
+Then
+\begin{equation}
+\int N_{\rm cross}(0)\,d\mathbf Q
+=
+\int |d_0|\,d\mathbf Q^-<\infty,
+\label{eq:4.16}
+\end{equation}
+hence \(N_{\rm cross}(0)<\infty\) almost surely.  Moreover
+\begin{equation}
+\int N_{>R,\rm cross}(0)\,d\mathbf Q
+=
+\int |d_0|\mathbf1_{\{|d_0|>R\}}\,d\mathbf Q^-
+\le
+\frac1R\int d_0^2\,d\mathbf Q^-.
+\label{eq:4.17}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For each selected edge, send unit density along the interval joining its
+two feedback endpoints.  Stationary Campbell/mass transport gives
+\[
+\int N_{\rm cross}(0)\,d\mathbf Q
+=
+\int |d_0|\,d\mathbf Q^-.
+\]
+Cauchy--Schwarz and Lemma~\ref{lem:palm-l2} make the right side finite.
+Restricting the same transport to \(|d_0|>R\) gives the first equality
+in \eqref{eq:4.17}, and
+\[
+|d_0|\mathbf1_{\{|d_0|>R\}}\le d_0^2/R
+\]
+gives the estimate.
+\end{proof}
+
+\begin{lemma}[Zero-relative-flux closure]
+\label{lem:zero-flux}
+Every selected good-event local limit of \(\mathbf Q_n\) has zero
+relative flux with respect to its feedback current.
+\end{lemma}
+
+\begin{proof}
+At every non-event cut \(x\), define
+\[
+C_n(x)
+=
+\#\{i:\widehat\xi_i\le x<\widehat\eta_{\sigma_n(i)}\}
+-
+\#\{i:\widehat\eta_{\sigma_n(i)}\le x<\widehat\xi_i\}.
+\]
+For every finite permutation,
+\begin{equation}
+\boxed{C_n(x)=K_n(x)}
+\label{eq:4.18}
+\end{equation}
+identically.
+
+For \(R<\infty\), let \(C_n^{(R)}(x)\) count only selected crossing edges
+of feedback length at most \(R\).  This is a local observable.  Since
+\(C_n=K_n\),
+\begin{equation}
+\begin{aligned}
+\mathbf Q_n\{C_n^{(R)}(0)\neq K_n(0)\}
+&\le
+\frac1{|I_n|}\sum_{d_i>R}d_i\\
+&\le
+\frac n{|I_n|}\frac{C_\varepsilon}{R}.
+\end{aligned}
+\label{eq:4.19}
+\end{equation}
+Along the selected deterministic subsequence, take \(Q_n\Rightarrow Q\).
+For every continuity radius \(R\), vacancy of the root cut and local
+edge convergence make the truncated integer-current discrepancy
+an almost-everywhere continuous observable.  Passing \eqref{eq:4.19} to the
+limit gives
+\begin{equation}
+\mathbf Q\{C^{(R)}(0)\neq K(0)\}\le\frac{C_\varepsilon}{R}.
+\label{eq:4.20}
+\end{equation}
+
+By Lemma~\ref{lem:finite-crossings},
+\[
+N_{>R,\rm cross}(0)\longrightarrow0
+\quad\text{in }L^1(\mathbf Q),
+\]
+and therefore
+\[
+C^{(R)}(0)\longrightarrow C(0)
+\]
+in probability (indeed eventually almost surely for the finite realized
+set of crossing edges).  Hence
+\[
+\begin{aligned}
+\mathbf Q\{C(0)\neq K(0)\}
+&\le
+\mathbf Q\{C(0)\neq C^{(R)}(0)\}\\
+&\quad+
+\mathbf Q\{C^{(R)}(0)\neq K(0)\}
+\longrightarrow0
+\end{aligned}
+\]
+along continuity radii \(R\to\infty\).  It follows that
+\begin{equation}
+C(0)=K(0)\qquad\mathbf Q\text{-a.s.}
+\label{eq:4.21}
+\end{equation}
+At a source event both \(C\) and \(K\) jump by \(+1\), at a target event
+both jump by \(-1\), and between events both are constant.  Thus
+\(C-K\) is a spatially constant integer, and \eqref{eq:4.21} forces it to be
+zero.
+\end{proof}
+
+\begin{theorem}[Compactness of locally minimizing matchings]
+\label{thm:comp}
+Let \(\mathbf Q_{n,\varepsilon}\) be the empirical matching-scene law
+built from the feedback graph associated with outer tolerance
+\(\varepsilon\).  For every compatible metric \(d_{\rm scene}\) on local
+matching-scene laws and every \(\delta>0\),
+\begin{equation}
+\lim_{\varepsilon\downarrow0}
+\limsup_{n\to\infty}
+\Pp\left\{
+d_{\rm scene}\bigl(
+\mathbf Q_{n,\varepsilon},\mathcal G_{\lambda,2}^0
+\bigr)>\delta
+\right\}=0.
+\label{eq:4.C}
+\end{equation}
+Every good-event subsequential limit \(\mathbf Q\) has the following
+properties:
+
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.3em]
+\item \(\mathbf Q\) is translation invariant and its environment
+marginal is \(\cF_\lambda\);
+
+\item the matching is a perfect matching of the source and target events;
+
+\item the matching is locally minimizing for
+\(\mathfrak c_\lambda\) against every finite alternating modification;
+
+\item the matching has zero relative flux;
+
+\item if \(\mathbf Q^{-}\) denotes its source Palm law, then the
+pushforward
+\[
+(\xi=0,u;\ \eta,v=\text{mark of the matched target})
+\longmapsto (u,v)
+\]
+is exactly a subsequential weak limit of
+\begin{equation}
+\kappa_n:=\frac1n\sum_{i=1}^n
+\delta_{(U_i,V_{\sigma_n(i)})}.
+\label{eq:4.22}
+\end{equation}
+In particular both marginals of that projective law are uniform.
+\end{enumerate}
+\end{theorem}
+
+\begin{proof}
+\emph{Tightness and stationarity.}
+Fix \(\varepsilon>0\) and work on
+\(\mathcal G_{n,\varepsilon}\).  The environment marginal is tight by
+Theorem~\ref{thm:env}.  Theorem~\ref{thm:fgl2} gives a bound
+\(Z_n\le C_\varepsilon\) outside an additional \(o(1)\) event.  On this
+event, Lemma~\ref{lem:no-loss} implies that, in any fixed rooted window,
+the probability of seeing a source whose partner lies farther than
+\(R\) is \(O_{\varepsilon}(R^{-2})\); the same holds for targets.
+More explicitly, for every fixed observation radius \(A\),
+\[
+\mathbf Q_n\{\exists\hbox{ a source in }[-A,A]\hbox{ with }d_i>R\}
+\le
+\frac{(2A+o(1))}{|I_n|}\#\{i:d_i>R\}
+\le
+(2A+o(1))\frac{Z_n}{R^2}.
+\]
+The same estimate holds for targets.  Together with local finiteness of
+the point processes this gives tightness of the matching relation.
+
+Approximate translation invariance
+follows directly from the averaging definition \eqref{eq:4.1}:
+for a bounded local \(F\) and fixed \(h\),
+\[
+\left|\int F\circ\theta_h\,d\mathbf Q_n-\int F\,d\mathbf Q_n\right|
+\le
+2\|F\|_\infty\frac{|h|}{|I_n|}+o(1).
+\]
+Hence every good-event limit is translation invariant.  Its
+environment marginal is \(\cF_\lambda\) by Theorem~\ref{thm:env} on the good event.
+
+\emph{Perfectness.}
+Lemma~\ref{lem:no-loss} rules out escape of a partner to infinity under
+either source or target Palm rooting.  Since every finite state is a
+bijection, the local limit is therefore a bijection as well.
+
+\emph{Palm law, inherited second moment, and zero relative flux.}
+Lemma~\ref{lem:palm-l2} transfers the finite-sample second-moment bound directly
+through compact edge tests,
+and Lemmas~\ref{lem:finite-crossings}--\ref{lem:zero-flux} give a finite
+crossing current with zero relative-flux constant.
+
+\emph{Local optimality.}
+For each \(m\), let \(F_m\) be the closure of the union of all
+rooted optimizer scenes from the selected samples with index at least
+\(m\).  Each finite law has mass one on \(F_m\) eventually; closed-set
+Portmanteau gives \(Q(F_m)=1\), hence \(Q(\bigcap_mF_m)=1\).
+
+Suppose a simple perfect scene in this intersection admitted a strict
+finite improvement by \(\delta>0\).  All involved endpoints lie in
+a bounded window.  Simplicity and strictness give a neighbourhood of
+that scene in which the same finite modification remains improving.
+The compact-window cost convergence of Corollary~\ref{cor:limit-cost}
+then excludes every sufficiently late optimizer scene from
+that neighbourhood: its gauged cost improvement would also improve
+the original Euclidean assignment.  This contradicts membership in
+the corresponding \(F_m\).  Thus local minimality holds \(Q\)-almost
+surely.
+
+\emph{Projective Palm identification.}
+The mass-conservation readout in Lemma~\ref{lem:palm} proves (v).
+The first marginal is uniform by the identified source intensity.
+For the second, send each target-mark indicator along the matched
+edge.  Stationary mass transport identifies its outgoing source-window
+mean with the target-window intensity, which is also uniform.
+
+We now prove the outer statement.  If, for some fixed
+\(\varepsilon,\delta>0\), the event
+\[
+E_n:=\mathcal G_{n,\varepsilon}\cap
+\left\{d_{\rm scene}(\mathbf Q_{n,\varepsilon},\mathcal G_{\lambda,2}^0)>\delta\right\}
+\]
+had probability bounded below along a subsequence, apply
+Lemma~\ref{lem:good-sample-extraction} inside \(E_n\), retaining the
+localization bound and all the fixed-window constraints used above.
+
+The resulting deterministic scene laws are tight.  A convergent subsequence
+has the identified environment, perfectness, finite Palm second moment,
+local minimality and zero relative flux, so its limit belongs to
+\(\mathcal G_{\lambda,2}^0\), contradicting the retained distance
+\(>\delta\).
+Thus \(\Pp(E_n)\to0\).  Since
+\(\Pp(\mathcal G_{n,\varepsilon}^c)\le\varepsilon+o(1)\),
+\[
+\limsup_{n\to\infty}
+\Pp\left\{
+d_{\rm scene}\bigl(
+\mathbf Q_{n,\varepsilon},\mathcal G_{\lambda,2}^0
+\bigr)>\delta
+\right\}
+\le\varepsilon,
+\]
+and \(\varepsilon\downarrow0\) gives \eqref{eq:4.C}.
+\end{proof}
+
+\section{Kinetic gauge and finite genericity}
+\label{sec:kinetic}
+
+Let \((K,g,\mathcal N^-,\mathcal N^+)\) have the stationary feedback law
+\(\cF_\lambda\).  The graph \(g\) is specified up to an additive constant by
+\begin{equation}
+g(y)-g(x)=\int_x^y\lambda\sgn K(s)\,ds.
+\label{eq:7.1}
+\end{equation}
+Write source marks as \(a=1-u\in[0,1]\) and target marks as
+\(b=1+v\in[1,2]\).  With respect to the natural left-to-right
+filtration, their predictable marked intensities are
+\begin{equation}
+[1-a\lambda\sgn K(x-)]\,da\,dx,
+\qquad
+[1+b\lambda\sgn K(x-)]\,db\,dx.
+\label{eq:7.2}
+\end{equation}
+
+\subsection{Exact kinetic action}
+
+For any representative of the graph cocycle, let
+\begin{equation}
+X=\xi-a g(\xi),\qquad Y=\eta+b g(\eta),
+\qquad
+\mathsf h((X,a),(Y,b)):=\frac{(Y-X)^2}{2(a+b)}.
+\label{eq:7.3}
+\end{equation}
+Choose an absolutely continuous primitive \(G' = g\).
+
+\begin{proposition}[Exact kinetic gauge]
+\label{prop:kinetic-gauge}
+The limiting feedback cost \eqref{eq:3.10} satisfies
+\begin{equation}
+\boxed{
+\mathfrak c_\lambda((\xi,a),(\eta,b))
+=\mathsf h((X,a),(Y,b))+R(\xi,a)+C(\eta,b),}
+\label{eq:7.4}
+\end{equation}
+where
+\begin{equation}
+R(\xi,a)=G(\xi)-\frac a2g(\xi)^2,
+\qquad
+C(\eta,b)=-G(\eta)-\frac b2g(\eta)^2.
+\label{eq:7.5}
+\end{equation}
+Thus finite alternating comparisons for \(\mathfrak c_\lambda\) are
+exactly the finite alternating comparisons for \(\mathsf h\).
+\end{proposition}
+
+\begin{proof}
+Put \(p=g(\xi)\), \(q=g(\eta)\), \(d=\eta-\xi\), and
+\(D=a+b\).  Since \(Y-X=d+ap+bq\), direct expansion gives
+\[
+\mathfrak c_\lambda-\mathsf h
+=-\frac{ab(q-p)^2+(ap+bq)^2}{2D}
+-\int_\xi^\eta g(s)\,ds.
+\]
+The identity
+\[
+ab(q-p)^2+(ap+bq)^2=D(ap^2+bq^2)
+\]
+reduces this to \eqref{eq:7.5}.  Row and column terms cancel under every finite
+alternating rematching.
+\end{proof}
+
+\begin{lemma}[No finite alternating ties]
+\label{lem:no-finite-alternating-ties}
+Almost surely under the feedback environment law, no finite alternating
+cycle has equal costs for its two pairings.
+\end{lemma}
+
+\begin{proof}
+Condition on the jump coordinates, jump types, and all marks except
+one source mark \(a\) on a given cycle.  The feedback path \(g\)
+is fixed by the coordinates and jump types.  The two targets competing
+at that source have distinct marks \(b_1,b_2\) almost surely.
+
+By the exact kinetic gauge, the cycle cost difference, as a function
+of \(a\), is a fixed constant plus the difference of the two rational
+edge costs.  The latter have distinct poles at \(-b_1,-b_2\).
+The numerator at \(-b_j\) is the square of
+\[
+\eta_j-\xi+b_j\bigl(g(\eta_j)-g(\xi)\bigr),
+\]
+which is nonzero: the map
+\(x\mapsto x+b_j(g(x)-g(\xi))\) is strictly increasing and
+equals \(\xi\) only at \(x=\xi\), while event coordinates
+are distinct.  Hence the cost difference is not identically zero.
+Its zero set in the admissible interval for \(a\) is finite.
+
+Conditional on the unmarked jump path, the source mark at pre-jump
+state \(k\) has density
+\[
+\frac{1-a\lambda\sgn k}{1-(\lambda/2)\sgn k},\qquad 0<a<1,
+\]
+and marks at different jumps are conditionally independent.  This
+density is bounded and strictly positive, so the tie has probability zero.
+Taking the union over the countably many finite label cycles proves the claim.
+\end{proof}
+
+\section{Regenerative finite-energy uniqueness}
+\label{sec:regenerative-endgame}
+
+The compactness theorem supplies stationary, locally minimizing,
+zero-relative-flux matching laws with finite source-Palm second moment.
+We prove uniqueness by finding a cut that two such matchings leave empty.
+To obtain this cut, we condition on a long remaining zero-current hold at
+a fixed spatial origin.  Regeneration describes the conditional
+environment, and an energy iteration controls the edges that could cross
+the hold.  The finite source-Palm second moment closes the iteration.
+
+For a stationary phase \(\Sigma\), write \(d_e\) for the feedback-coordinate
+length of a selected edge \(e\).  For a cut \(x\) and bounded interval \(I\), put
+\begin{equation}
+T_\Sigma(x):=\#\{e:x\in I_e\},\qquad
+S_\Sigma(x):=\sum_{e:x\in I_e}|d_e|,
+\label{eq:8.1}
+\end{equation}
+\begin{equation}
+\mathcal H_\Sigma(I)
+:=\int_I\bigl(T_\Sigma(x)+S_\Sigma(x)\bigr)\,dx,
+\label{eq:8.2}
+\end{equation}
+where \(I_e\) is the closed interval joining the two feedback endpoints of \(e\).
+
+\begin{lemma}[Mean local crossing energy]
+\label{lem:mean-local-energy-prove}
+For every \(\Sigma\in\mathcal G_{\lambda,2}^0\), there is a finite constant \(C_\Sigma\) such that
+\begin{equation}
+\E\mathcal H_\Sigma(I)
+=|I|\left(\E_{\Sigma^-}|d_0|+\E_{\Sigma^-}d_0^2\right)
+\le C_\Sigma|I|.
+\label{eq:8.3}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+For each selected edge send unit density along its feedback interval.  Stationary
+Campbell mass transport gives
+\[
+\E T_\Sigma(0)=\E_{\Sigma^-}|d_0|.
+\]
+If an edge of length \(|d|\) sends mass density \(|d|\) along the same interval, the
+mass through the origin is \(S_\Sigma(0)\), and Campbell gives
+\[
+\E S_\Sigma(0)=\E_{\Sigma^-}d_0^2.
+\]
+Integrate over \(I\) and use Cauchy--Schwarz together with the definition of the finite source-Palm second moment.
+\end{proof}
+
+\subsection{Return-cell regeneration}
+
+Let \(\mathcal R\) be the point process of jump coordinates at which the stationary
+feedback current jumps from a nonzero state into zero.  Under the Palm law
+\(\Pp^{\mathcal R}\), enumerate
+\begin{equation}
+\cdots<R_{-1}<R_0=0<R_1<R_2<\cdots.
+\label{eq:8.4}
+\end{equation}
+
+For event-count purposes, the \(j\)-th return cell is the path segment
+\((R_j,R_{j+1}]\): it starts immediately after the return jump at \(R_j\), includes the
+zero holding time following \(R_j\), all subsequent excursion events, and the return jump
+at \(R_{j+1}\).  Let \(L_j=R_{j+1}-R_j\), let \(N_j\) count the
+source and target jumps in \((R_j,R_{j+1}]\), and write
+\[
+Z_j:=\text{its initial zero hold},\qquad E_j:=L_j-Z_j.
+\]
+The marked excursion consists of all subsequent holding increments, jump
+types and marks, starting with the departure from zero and ending at the
+next return.  Its duration is \(E_j\).
+
+\begin{lemma}[IID return cells with exponential moments]
+\label{lem:return-cells-prove}
+Under \(\Pp^{\mathcal R}\), the marked return cells are iid.
+The field \((Z_j)_{j\in\mathbb Z}\) consists of iid
+\(\operatorname{Exp}(2)\) variables independent of the entire marked
+excursion field.  There exists
+\(\theta_0>0\) such that
+\begin{equation}
+\E^{\mathcal R}e^{\theta_0N_0}<\infty,
+\qquad
+\E^{\mathcal R}e^{\theta_0L_0}<\infty.
+\label{eq:8.5}
+\end{equation}
+Every return cell contains equally many source and target events.
+\end{lemma}
+
+\begin{proof}
+At state zero the total jump rate is two, so its waiting time is
+exponential of rate two and independent of the departure type and mark.
+The strong Markov property at the departure makes the subsequent marked
+excursion independent of that waiting time.
+
+After leaving zero, the sign of the current cannot change before returning
+to zero.  On the positive half-line the embedded jump chain moves away from
+zero with probability
+\[
+p_+
+=\frac{1-\lambda/2}{(1-\lambda/2)+(1+3\lambda/2)}
+=\frac{1-\lambda/2}{2+\lambda}<\frac12.
+\]
+On the negative half-line it moves away from zero with probability
+\[
+p_-
+=\frac{1-3\lambda/2}{(1+\lambda/2)+(1-3\lambda/2)}
+=\frac{1-3\lambda/2}{2-\lambda}<\frac12.
+\]
+Thus the number of jumps in an excursion from zero back to zero has an exponential
+moment.  The holding rate is always one of \(2,2+\lambda,2-\lambda\), hence is bounded
+below by \(2-\lambda>0\).  Conditional on the jump count, the cell length is dominated
+by a sum of that many iid exponentials with rate \(2-\lambda\), plus the initial zero
+holding time.  Choosing \(\theta_0>0\) sufficiently small gives the second exponential
+moment in \eqref{eq:8.5}.
+
+The strong Markov property at each jump into zero gives independence and identical
+distribution of the forward cells.  The stationary Palm construction gives the same
+law in both directions.
+
+Immediately after \(R_j\) the current is zero, and after the included return jump at
+\(R_{j+1}\) it is zero again.  Hence the net number of \(+1\) minus \(-1\) jumps in
+\((R_j,R_{j+1}]\) is zero, exactly equality of the source and target counts.
+\end{proof}
+
+For a return cell, match its source events increasingly to its target events
+in feedback coordinate, and let \(W_j\) be the resulting feedback cost.
+
+\begin{lemma}[Comparison rewards excluding the zero hold]
+\label{lem:idle-free-reward}
+There are iid nonnegative random variables
+\[
+V_j=C_\lambda N_jE_j^2
+\]
+which dominate the cellwise increasing comparison rewards \(W_j\),
+are independent of the entire field \((Z_j)_{j\in\mathbb Z}\), and satisfy
+\begin{equation}
+\Pp^{\mathcal R}\{V_j>t\}\le Ce^{-ct^{1/3}}.
+\label{eq:8.6}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+The cell convention is \((R_j,R_{j+1}]\), so the return event at
+\(R_j\) is not one of the events matched inside cell \(j\).  Every
+matched vertex in that cell lies in
+\([R_j+Z_j,R_{j+1}]\).  Each comparison edge therefore has length
+at most \(E_j\).  The upper bound in \eqref{eq:3.11} gives
+\(W_j\le C_\lambda N_jE_j^2\).  The variables on the right are
+functions only of the marked excursions.  They are iid and independent
+of all zero holds.
+
+Both \(N_j\) and \(E_j\) have exponential
+moments by the proof of Lemma~\ref{lem:return-cells-prove}.  If
+\(N_jE_j^2>t/C_\lambda\), either \(N_j\) or \(E_j\) exceeds
+a constant multiple of \(t^{1/3}\), proving \eqref{eq:8.6}.
+\end{proof}
+
+\begin{lemma}[The zero hold seen from a fixed spatial origin]
+\label{lem:stationary-zero-hold}
+Under the stationary environment law \(\cF_\lambda\), conditional on
+\(K(0)=0\), let \(A_0\) be the time since the last return to zero and
+\(B_0\) the time until the next departure.  Then \(A_0,B_0\) are independent
+\(\operatorname{Exp}(2)\) variables.  Reindex the cells so this zero hold
+belongs to cell zero.  The entire marked excursion field and all other
+zero holds have their ordinary return-Palm joint law, independently of
+\((A_0,B_0)\).
+\end{lemma}
+
+\begin{proof}
+Let \(\rho_{\mathcal R}>0\) be the return intensity.  The intervals
+\([R_j,R_{j+1})\) partition the line.  Campbell's formula applied to this
+partition gives the stationary renewal inversion
+\begin{equation}
+\E F(\omega)
+=\rho_{\mathcal R}\E^{\mathcal R}
+  \int_0^{L_0}F(\theta_t\omega)\,dt
+\label{eq:8.7}
+\end{equation}
+for every nonnegative measurable environment function \(F\).  Indeed,
+integrate \(F(\theta_x\omega)\) over \([0,1]\), split the integral over
+the return intervals, and use stationarity and Campbell; Tonelli removes
+the spatial unit-window indicator.  In particular,
+\(\rho_{\mathcal R}\E^{\mathcal R}L_0=1\).
+
+Write \(\Xi\) for the marked excursions and the holds \((Z_j)_{j\ne0}\),
+all indexed relative to the return starting the distinguished cell.
+Lemma~\ref{lem:return-cells-prove} makes \(\Xi\) independent of \(Z_0\).
+Except at event coordinates, \(K(t)=0\) in cell zero exactly when
+\(0<t<Z_0\).  For any nonnegative measurable \(\phi\), inversion and
+the density \(2e^{-2z}\) of \(Z_0\) therefore give
+\begin{equation}
+\begin{aligned}
+\E\bigl[\mathbf1_{\{K(0)=0\}}\phi(A_0,B_0,\Xi)\bigr]
+&=\rho_{\mathcal R}\E^{\mathcal R}
+    \int_0^{Z_0}\phi(t,Z_0-t,\Xi)\,dt\\
+&=\rho_{\mathcal R}\int_0^\infty\!\int_0^\infty
+    2e^{-2(a+b)}\E^{\mathcal R}\phi(a,b,\Xi)\,da\,db.
+\end{aligned}
+\label{eq:8.8}
+\end{equation}
+Here \(\Xi\) on the left is read after reindexing at the last return;
+it does not depend on the position within the zero hold.  Taking
+\(\phi=1\) yields
+\(\Pp\{K(0)=0\}=\rho_{\mathcal R}/2=\varpi(0)>0\).
+Dividing \eqref{eq:8.8} by this probability gives the product density
+\(4e^{-2a}e^{-2b}\) times the original law of \(\Xi\), proving the
+full joint assertion for the environment law.
+\end{proof}
+
+\subsection{Conditional environmental regularity}
+
+For \(h\ge1\), define an event in the original spatial stationary law by
+\begin{equation}
+\mathsf A_h:=\{K(0)=0,\ h\le B_0\le h+1\},\qquad
+p_h:=\Pp(\mathsf A_h)
+=\varpi(0)e^{-2h}(1-e^{-2})>0.
+\label{eq:8.9}
+\end{equation}
+For any interval \(I\) of length \(L\) and center \(c\), let \(I^*\)
+be its concentric length-\(4L\) enlargement and set
+\[
+J^-=[c-2L,c-L],\qquad J^+=[c+L,c+2L].
+\]
+Given constants \(C_0,c_0>0\), let \(\mathsf R(I)\) mean that
+\begin{enumerate}[label=\textup{(\roman*)},leftmargin=2.3em]
+\item between every pair of non-event zero-current cuts
+\(x^-\in J^-\), \(x^+\in J^+\), there are at most \(C_0L\)
+source events;
+\item the sum of \(V_j\) over the complete return-cell event sets between
+any such pair is at most \(C_0L\);
+\item each of \(J^-,J^+\) has zero-current occupation at least \(c_0L\).
+\end{enumerate}
+The counts of the two colours between these cuts agree, because those
+events form a union of complete return-cell event sets.
+
+\begin{lemma}[Environmental regularity conditional on a long residual hold]
+\label{lem:conditional-gap-regularity}
+There are constants \(C_0,c_0,C,L_*\), depending only on the feedback law,
+such that, if \(I\) has center \(h/2\) and length
+\(L\ge\max\{L_*,16(h+1)\}\), then
+\begin{equation}
+\Pp\{\mathsf R(I)^c\mid\mathsf A_h\}\le \frac{C}{L}.
+\label{eq:8.10}
+\end{equation}
+The constants do not depend on \(h\) or on any matching phase.
+\end{lemma}
+
+\begin{proof}
+By Lemma~\ref{lem:stationary-zero-hold}, conditional on \(\mathsf A_h\),
+the age \(A_0\) remains a rate-two exponential, independent of \(B_0\)
+and of the ordinary excursion and neighboring-cell data.
+
+Collapse \([0,B_0]\), leaving the negative half-line fixed and translating the
+subsequent environment left by \(B_0\). In the auxiliary environment the
+distinguished return is at \(-A_0\), its departure is at zero, and its
+next return is at \(E_0\). The distinguished cell now has zero hold
+\(A_0\), so the entire indexed cell array has the ordinary iid Palm law,
+independently of \(h\) and \(B_0\). The original matching and its
+conditional law are retained throughout.
+
+It suffices to control the partial sums of four nonnegative cell
+observables: length \(L_j\), zero hold \(Z_j\), event count \(N_j\),
+and reward \(V_j\). Write \(\mu_X=\E X_0\) for any of these
+observables. All have finite second moments, and \(\mu_L,\mu_Z>0\).
+Put \(k=\lfloor L/M\rfloor\). For each of the two index directions,
+let \(S_X(n)\) be the sum of the first \(n\) cell observables in that
+direction. For fixed integers \(M,H\), Chebyshev's inequality and a
+finite union bound give
+\[
+\Pp\bigl\{\exists X,m:\ |S_X(mk)-\mu_Xmk|>k,
+\ 0\le m\le H\bigr\}\le C_H/k.
+\]
+On the complementary event, monotonicity between consecutive grid
+indices gives
+\[
+|S_X(n)-\mu_Xn|\le(1+\mu_X)k,
+\qquad 0\le n\le Hk,
+\]
+in both directions. This interpolation constant is independent of
+\(H\).
+
+Differences of these bounds also control individual boundary
+cells by \(Ck\). In particular \(A_0\le L_0\le Ck\), so the
+auxiliary return coordinates differ from their linear means by at most
+\(Ck\).
+
+Choose \(M\) first, large enough that these errors are a small
+fraction of \(L\), and then choose \(H\), depending on \(M\), so
+that the controlled returns extend beyond \([-3L,3L]\). Increase
+\(L_*\) so that \(k\ge L/(2M)\). The event-count and reward sums
+then bound the total counts and rewards of cells meeting this window
+by \(CL\).
+
+For a subinterval of length \(\ell\ge L/2\) in the
+window, discarding its two boundary cells loses at most \(Ck\) in
+length. Subtracting the length and zero-hold partial sums over the
+remaining complete cells gives zero occupation at least
+\[
+\frac{\mu_Z}{\mu_L}\ell-Ck\ge c_0L,
+\]
+after the preceding choice of \(M\), with constants depending only
+on the cell law. Event coordinates have zero Lebesgue measure. The
+exceptional probability is at most \(C_H/k\le C'/L\).
+
+To transfer these estimates back, put \(c=h/2\). Then
+\(c\le L/32\) and \(B_0\le L/16\). A pair of original search
+cuts corresponds in the auxiliary environment to
+\(x^-\) and \(x^+-B_0\), both lying in \([-3L,3L]\).
+The event sets and their cell rewards are unchanged, so the preceding
+upper bounds give (i) and (ii).
+
+For the lower occupation bounds, use the fixed auxiliary intervals
+\[
+K^-=J^-,\qquad
+K^+=[c+L,c+2L-L/16].
+\]
+Both lie in \([-3L,3L]\) and have length at least \(L/2\).
+The negative interval is unchanged when the hold is restored, while
+\(K^++B_0\subset J^+\) for every \(0\le B_0\le L/16\).
+Translation preserves its zero occupation, proving (iii) in the
+original environment. Thus all three estimates are uniform over the
+conditioned values \(B_0\in[h,h+1]\).
+\end{proof}
+
+\subsection{The deterministic energy iteration}
+
+\begin{lemma}[Zero-current surgery]
+\label{lem:zero-surgery-prove}
+Let \(x\) be a cut which is not an event coordinate, with \(K(x)=0\), and suppose
+\begin{equation}
+T_\Sigma(x)\le\Theta,
+\qquad
+S_\Sigma(x)\le\Theta.
+\label{eq:8.11}
+\end{equation}
+Delete the selected edges crossing \(x\).  The unmatched vertices on either side of the
+cut can be paired separately on that side, and the total feedback cost of all new repair
+edges is at most
+\begin{equation}
+C_\lambda\Theta^3.
+\label{eq:8.12}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Zero relative flux gives oriented crossing current \(K(x)=0\), so the unmatched
+vertices on each side have equal source and target counts.  There are at most
+\(T_\Sigma(x)\le\Theta\) crossing edges.
+
+Every endpoint of a crossing edge is at distance at most the length of
+that edge from the cut, and every individual crossing
+length is at most \(S_\Sigma(x)\le\Theta\).  Hence all unmatched endpoints on a fixed
+side lie within distance \(\Theta\) of the cut.  Pairing them arbitrarily produces at
+most \(\Theta\) new edges, each of length at most \(2\Theta\).  The upper coercivity
+bound in \eqref{eq:3.11} gives \eqref{eq:8.12}.
+\end{proof}
+
+\begin{lemma}[One-step bootstrap]
+\label{lem:one-step-bootstrap-prove}
+For fixed \(C_0,c_0>0\), there are constants \(C_B,r_*,L_*\) such that
+the following holds. Let \(L\ge L_*\), \(r\ge r_*\), and choose
+\(\Theta>0\) satisfying
+\begin{equation}
+\Theta<L/4,\qquad C_B\Theta^3\le rL/2.
+\label{eq:8.13}
+\end{equation}
+On the regular environment event \(\mathsf R(I)\),
+\begin{equation}
+\mathcal H_\Sigma(I)>rL
+\quad\Longrightarrow\quad
+\mathcal H_\Sigma(I^*)>\frac{c_0}{8}\Theta\,|I^*|.
+\label{eq:8.14}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Suppose first that each search interval contains a zero-current cut \(x^-\in J^-\),
+\(x^+\in J^+\), chosen away from the countable event coordinates, satisfying
+\begin{equation}
+T_\Sigma(x^\pm)\le\Theta,
+\qquad
+S_\Sigma(x^\pm)\le\Theta.
+\label{eq:8.15}
+\end{equation}
+Because the cuts are at distance at least \(L/2>2\Theta\) from \(I\), an edge crossing
+one of the cuts cannot meet \(I\).  Also no edge can cross both cuts.
+
+Delete all selected edges meeting either cut and every selected edge with
+both endpoints between the cuts.  Match all source and target events
+between the cuts by the cellwise increasing environmental matching.
+Each non-event zero cut lies in an
+initial zero hold, so the events between the cuts are a union of complete
+return-cell event sets \((R_j,R_{j+1}]\), each with equal colour counts.
+Repair the unmatched exterior endpoints separately at the two cuts using
+Lemma~\ref{lem:zero-surgery-prove}.  The resulting perfect matching differs from
+\(\Sigma\) on finitely many edges.
+
+Local minimality, the lower coercivity in \eqref{eq:3.11}, the environmental reward bound, and
+the two repair estimates give
+\begin{equation}
+\sum_{e:I_e\cap I\ne\varnothing}d_e^2
+\le C\bigl(L+\Theta^3\bigr).
+\label{eq:8.16}
+\end{equation}
+At most \(CL\) selected edges meet \(I\), since their source endpoints
+lie between the cuts.  Using \(|d|\le(1+d^2)/2\), we obtain
+\begin{equation}
+\mathcal H_\Sigma(I)
+\le\sum_{e:I_e\cap I\ne\varnothing}(|d_e|+d_e^2)
+\le \frac{CL}{2}
++\frac32\sum_{e:I_e\cap I\ne\varnothing}d_e^2
+\le C'(L+\Theta^3).
+\label{eq:8.17}
+\end{equation}
+Take \(C_B\ge C'\) and \(r_*\ge2C_B\). The cubic condition gives
+\begin{equation}
+\mathcal H_\Sigma(I)\le C_BL+C_B\Theta^3\le rL.
+\label{eq:8.18}
+\end{equation}
+Thus \(\mathcal H_\Sigma(I)>rL\) is impossible if both good cuts exist.
+
+Hence on that event at least one search interval contains no zero-current cut satisfying
+\eqref{eq:8.15}.  On the regular environment event, the zero set in that search interval has
+Lebesgue measure at least \(c_0L\).  At almost every point of that zero set,
+\(T_\Sigma+S_\Sigma>\Theta\).  Therefore
+\[
+\mathcal H_\Sigma(I^*)\ge c_0\Theta L
+=\frac{c_0}{4}\Theta|I^*|.
+\]
+This is strictly larger than \((c_0/8)\Theta|I^*|\), proving \eqref{eq:8.14}.
+\end{proof}
+
+\begin{theorem}[Local energy conditional on a long zero hold]
+\label{thm:conditional-gap-energy}
+There are constants \(A,C,L_*\) such that, for every
+\(\Sigma\in\mathcal G_{\lambda,2}^0\), every \(h\ge1\), and
+every \(L\ge\max\{L_*,16(h+1)\}\), if \(I\) has center
+\(h/2\) and length \(L\), then
+\begin{equation}
+\Pp\left\{
+\mathcal H_\Sigma(I)>AL\mid\mathsf A_h\right\}\le \frac{C}{L}.
+\label{eq:8.19}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+Use the constants from Lemmas~\ref{lem:conditional-gap-regularity}
+and~\ref{lem:one-step-bootstrap-prove}. Choose \(A\ge r_*\) and
+increase \(L_*\) so that, for every \(L\ge L_*\),
+\[
+\frac{16A}{c_0}<\frac L4,
+\qquad
+C_B\left(\frac{16A}{c_0}\right)^3\le\frac{AL}{2}.
+\]
+Let \(I_n\) be concentric intervals centered at \(h/2\), with
+\[
+L_n=4^nL,\qquad r_n=2^nA,\qquad
+\Theta_n=\frac{16r_n}{c_0}.
+\]
+The cubic inequality persists at every scale, since \(r_n^2/L_n=A^2/L\);
+also \(\Theta_n/L_n\) decreases. The one-step conclusion has exactly
+the next threshold, because \((c_0/8)\Theta_n=r_{n+1}\). Hence
+\[
+\{\mathcal H_\Sigma(I_n)>r_nL_n\}
+\subset
+\{\mathcal H_\Sigma(I_{n+1})>r_{n+1}L_{n+1}\}
+\cup\{\mathsf R(I_n)^c\}.
+\]
+This deterministic inclusion holds under the conditional joint law.
+Iteration gives
+\begin{equation}
+\begin{aligned}
+\Pp\{\mathcal H_\Sigma(I_0)>AL\mid\mathsf A_h\}
+\le{}&\Pp\{\mathcal H_\Sigma(I_N)>r_NL_N\mid\mathsf A_h\}\\
+&+C\sum_{n=0}^{N-1}\frac1{4^nL}.
+\end{aligned}
+\label{eq:8.20}
+\end{equation}
+By Lemma~\ref{lem:mean-local-energy-prove} and Markov's inequality,
+the first term is at most
+\[
+\frac{C_\Sigma}{p_h r_N}\longrightarrow0.
+\]
+Here \(h\) is fixed, so \(p_h>0\) is fixed. The remaining series is
+\(4/(3L)\), proving \eqref{eq:8.19} after changing \(C\). Thus the conditioning
+factor \(p_h^{-1}\) affects only the vanishing terminal term.
+\end{proof}
+
+\begin{corollary}[A common empty cut in any stationary joining]
+\label{cor:common-empty-gap}
+Let \((\Sigma^+,\Sigma^-)\) be a stationary common-environment
+joining of two elements of \(\mathcal G_{\lambda,2}^0\).  In its
+original spatial stationary law, there is positive probability of a
+cut crossed by neither matching.
+\end{corollary}
+
+\begin{proof}
+Take \(L=16(h+1)\) and \(I\) centered at \(h/2\).  On
+\(\mathsf A_h\), there is no event in \((0,h)\).  Any edge
+crossing \(h/2\) therefore has length at least \(h\), crosses
+all of \((0,h)\), and contributes at least \(h^2\) to
+\(\int_0^h S_\Sigma(x)\,dx\).
+
+For sufficiently large fixed
+\(h\), one has \(h^2>AL\) and the sum of the two bounds in
+\eqref{eq:8.19} is less than \(1/2\).  Conditional on \(\mathsf A_h\),
+the union bound then gives probability at least \(1/2\) that neither
+matching crosses \(h/2\).  Its unconditional spatial probability
+is at least \(p_h/2>0\).
+\end{proof}
+
+\subsection{Disagreement components and uniqueness}
+
+\begin{lemma}[Every stationary disagreement component spans both infinities]
+\label{lem:spanning-disagreements}
+In a stationary common-environment joining of two elements of
+\(\mathcal G_{\lambda,2}^0\), almost surely every component of the
+symmetric difference has one end tending to \(-\infty\) and one
+end tending to \(+\infty\).  Consequently, a common empty cut
+implies equality of the entire matchings.
+\end{lemma}
+
+\begin{proof}
+After common edges are removed, every remaining vertex has degree two.
+Thus each component is a finite alternating cycle or a double ray.
+The first possibility is excluded by local minimality and
+Lemma~\ref{lem:no-finite-alternating-ties}: switching the cycle in
+each matching would otherwise force its two costs to be equal.
+
+Lemma~\ref{lem:finite-crossings} holds simultaneously at all rational
+cuts.  Every end of a double ray therefore tends to one of the two
+spatial infinities.  Otherwise local finiteness would fail in a bounded
+interval, or that ray would traverse a rational cut infinitely often.
+
+If both ends tended right, the component would have a unique leftmost
+vertex.  Send one unit of mass from each vertex of every such component
+to its leftmost vertex.  This transport is translation covariant and
+has outgoing intensity at most the finite total vertex intensity.
+Each recipient, however, receives infinite mass.  The stationary
+mass-transport identity excludes every such recipient almost surely.
+The analogous transport to a rightmost vertex excludes two left ends.
+
+Every remaining component thus crosses every cut.  If both matchings
+have no edge crossing one cut, no disagreement component can exist.
+\end{proof}
+
+\begin{theorem}[Regenerative uniqueness at finite energy]
+\label{thm:regenerative-matching-uniqueness}
+Any stationary common-environment joining of two matchings in
+\(\mathcal G_{\lambda,2}^0\) is supported on equal matchings.
+\end{theorem}
+
+\begin{proof}
+Suppose the invariant event
+\(D=\{\Sigma^+\ne\Sigma^-\}\) has positive probability, and
+condition the stationary joining on \(D\).  The feedback environment
+is ergodic, as follows from its iid return cells.  Conditioning an
+extension over an ergodic environment on a translation-invariant event
+leaves its environmental marginal unchanged.  Indeed, for a bounded
+environmental test function \(f\), invariance gives
+\[
+\E[\mathbf1_D f]
+=\E\left[\mathbf1_D\,
+\frac1{2T}\int_{-T}^T f\circ\theta_x\,dx\right]
+\longrightarrow \Pp(D)\E f
+\]
+by the environmental ergodic theorem and bounded convergence.
+
+The conditioned matching marginals remain stationary, locally
+minimizing and of zero relative flux.  Their source-Palm second moments
+remain finite: the corresponding unnormalized stationary Palm
+integrals are bounded by the original integrals divided by \(\Pp(D)\),
+and the environmental source intensity is unchanged.
+
+Corollary~\ref{cor:common-empty-gap} therefore applies to this
+conditioned joining and gives positive spatial probability of a
+common empty cut.  Lemma~\ref{lem:spanning-disagreements} then forces
+the matchings to coincide, contradicting \(D\).  Thus \(\Pp(D)=0\).
+\end{proof}
+
+\begin{corollary}[A unique matching kernel over the environment]
+\label{cor:unique-environment-kernel}
+There is at most one stationary matching law in
+\(\mathcal G_{\lambda,2}^0\).  When such a law exists, its
+conditional matching kernel given the feedback environment is almost
+surely a point mass.
+\end{corollary}
+
+\begin{proof}
+Join any two regular conditional matching kernels independently over
+their common feedback environment.  Stationarity of the joint laws
+implies stationarity of this relative independent joining.  Theorem
+\ref{thm:regenerative-matching-uniqueness} makes the two samples equal
+almost surely.  Applying the same assertion to two conditional copies
+of one law shows that its kernel is a point mass.  Applying it to two
+different laws shows that their kernels coincide almost surely.
+\end{proof}
+
+\begin{theorem}[Projective uniqueness]
+\label{thm:EFE2}
+Every \(\Sigma\in\mathcal G_{\lambda,2}^0\) has the same source-Palm
+projective law \(\kappa[\Sigma]=\kappa_\infty\).
+\end{theorem}
+
+\begin{proof}
+The class is nonempty by the good-event compactness theorem.
+Corollary~\ref{cor:unique-environment-kernel} identifies its stationary
+matching law, and hence its source-Palm projective law.  Its first
+mark marginal is uniform by the source intensity \eqref{eq:3.9}.
+
+For the second, send \(\mathbf1_B(v)\) along every matched edge to its target.
+Stationary mass transport and perfectness identify the source-window
+outgoing mass with the target-window count carrying marks in \(B\).
+Its expectation is \(|B|\) by the target intensity \eqref{eq:3.9}.  Thus the
+second marginal is also uniform.
+\end{proof}
+
+\section{Macroscopic reconstruction}
+\label{sec:reconstruction}
+
+\subsection{Vertical concentration}
+
+\begin{proposition}[Vertical diagonal concentration]
+\label{prop:vd}
+For the Euclidean optimizer,
+\begin{equation}
+\boxed{
+\frac1n\sum_{i=1}^n|S_{\sigma_n(i)}-T_i|
+\xrightarrow{\Pp}0.
+}
+\label{eq:5.1}
+\end{equation}
+\end{proposition}
+
+\begin{proof}
+For a permutation \(\sigma\), set
+\[
+\mathcal E_n(\sigma)
+=
+\frac1n\sum_i
+D_{i,\sigma(i)}
+L\left(\frac{S_{\sigma(i)}-T_i}{D_{i,\sigma(i)}}\right).
+\]
+The Euclidean objective differs from \(\mathcal E_n\) by the
+permutation-independent average of \(D_{ij}=2+V_j-U_i\).  Let \(\rho_n\)
+match the order statistics of \(T\) and \(S\).  By DKW,
+\[
+\max_i|T_{(i)}-S_{(i)}|=O_{\Pp}(n^{-1/2}).
+\]
+Since \(L(z)\le z^2/2\),
+\[
+\mathcal E_n(\sigma_n)
+\le \mathcal E_n(\rho_n)
+\le \frac1{2n}\sum_i|T_{(i)}-S_{(i)}|^2
+=O_{\Pp}(n^{-1}).
+\]
+For \(|z|\le1\),
+\[
+L(z)\ge \frac{z^2}{1+\sqrt2}.
+\]
+Because \(1\le D_{ij}\le3\),
+\[
+\mathcal E_n(\sigma_n)
+\ge
+\frac{1}{3(1+\sqrt2)}
+\frac1n\sum_i|S_{\sigma_n(i)}-T_i|^2.
+\]
+Hence the average squared vertical displacement is \(O_{\Pp}(n^{-1})\),
+and Cauchy--Schwarz gives \eqref{eq:5.1}.
+\end{proof}
+
+\subsection{Block identification and reconstruction}
+
+Let \(\kappa_\infty\) be the common projective law from Theorem~\ref{thm:EFE2}.
+
+\begin{lemma}[Macroscopic block identification]
+\label{lem:block-comp}
+Let \(J=[a,b]\Subset(0,1)\) be fixed.
+For every bounded continuous \(f:[0,1]^2\to\R\),
+\begin{equation}
+\frac1n\sum_{i=1}^n
+\mathbf 1_{\{T_i\in J\}}
+f(U_i,V_{\sigma_n(i)})
+\xrightarrow{\Pp}
+|J|\int f\,d\kappa_\infty .
+\label{eq:6.1}
+\end{equation}
+\end{lemma}
+
+\begin{proof}
+Fix \(\varepsilon>0\) and use its original feedback graph.  Suppose
+for some \(\delta>0\) the events
+\[
+\mathcal G_{n,\varepsilon}\cap
+\left\{\left|\frac1n\sum_{\widehat\xi_i\in nJ}
+ f(U_i,V_{\sigma_n(i)})-|J|\int f\,d\kappa_\infty\right|>\delta\right\}
+\]
+have probability bounded below along a subsequence.  Apply
+Lemma~\ref{lem:good-sample-extraction} within these events, now with
+roots in \(nJ\).  The same stopped estimates apply: all fixed windows
+lie inside the bulk eventually, and the global current and energy
+bounds acquire the fixed factor \(|J|^{-1}\).
+
+The proof of Theorem~\ref{thm:comp} gives a further deterministic weak limit
+\(Q\in\mathcal G_{\lambda,2}^0\).  Corollary~\ref{cor:I4} and the
+global VC event give the two count inputs of Lemma~\ref{lem:palm}.
+Its Palm readout and Theorem~\ref{thm:EFE2} show that the displayed block statistic tends
+to \(|J|\int f\,d\kappa_\infty\), a contradiction.
+Thus its good-event failure probability tends to zero.
+
+To replace intersection coordinates by physical heights, put
+\(\zeta_{n,\varepsilon}=\|g_{n,\varepsilon}\|_\infty/n\) and
+\(\Delta_n=\sup_t|F_n(t)-t|\).
+The symmetric difference between
+\(\{i:\widehat\xi_i/n\in J\}\) and \(\{i:T_i\in J\}\)
+is contained in height strips of width \(\zeta_{n,\varepsilon}\)
+around the two endpoints.  Its normalized size is at most
+\begin{equation}
+4\zeta_{n,\varepsilon}+4\Delta_n+O(1/n)
+ =o_{\Pp}(1)\quad\hbox{on }\mathcal G_{n,\varepsilon}.
+\label{eq:6.4d}
+\end{equation}
+Multiplication by \(\|f\|_\infty\) bounds the statistic's change.
+The physical block failure probability therefore has limsup at most
+\(\varepsilon\).  This statistic and its asserted limit are independent
+of the auxiliary tolerance; letting \(\varepsilon\downarrow0\)
+proves convergence in probability.
+\end{proof}
+
+\begin{theorem}[Blockwise reconstruction of the empirical plan]
+\label{thm:reconstruct}
+The empirical plans satisfy
+\begin{equation}
+\boxed{
+\pi_n
+\xrightarrow{\Pp}
+dt\,\delta_t(ds)\,\kappa_\infty(du,dv).
+}
+\label{eq:6.4}
+\end{equation}
+\end{theorem}
+
+\begin{proof}
+By Lemma~\ref{lem:block-comp}, for every interval
+\(J\Subset(0,1)\) with rational endpoints and every bounded continuous
+\(f(u,v)\),
+\begin{equation}
+\frac1n\sum_i
+\mathbf 1_{\{T_i\in J\}}f(U_i,V_{\sigma_n(i)})
+\xrightarrow{\Pp}
+|J|\int f\,d\kappa_\infty .
+\label{eq:6.5}
+\end{equation}
+Finite linear combinations of such interval indicators approximate every
+continuous \(\phi:[0,1]\to\R\) uniformly after controlling arbitrarily
+small endpoint intervals.  Hence
+\begin{equation}
+\frac1n\sum_i
+\phi(T_i)f(U_i,V_{\sigma_n(i)})
+\xrightarrow{\Pp}
+\left(\int_0^1\phi(t)\,dt\right)
+\left(\int f\,d\kappa_\infty\right).
+\label{eq:6.6}
+\end{equation}
+By Stone--Weierstrass, finite sums of products
+\(\phi(t)f(u,v)\) are uniformly dense in
+\(C([0,1]^3)\).  Therefore
+\begin{equation}
+\frac1n\sum_i
+\delta_{(T_i,U_i,V_{\sigma_n(i)})}
+\xrightarrow{\Pp}
+dt\,\kappa_\infty(du,dv).
+\label{eq:6.7}
+\end{equation}
+
+Finally, for any Lipschitz test
+\(F(t,u,s,v)\),
+\[
+\left|
+\frac1n\sum_i
+F(T_i,U_i,S_{\sigma_n(i)},V_{\sigma_n(i)})
+-
+\frac1n\sum_i
+F(T_i,U_i,T_i,V_{\sigma_n(i)})
+\right|
+\le
+\Lip(F)\,
+\frac1n\sum_i|S_{\sigma_n(i)}-T_i|,
+\]
+which tends to zero in probability by Proposition~\ref{prop:vd}.  Approximation of continuous
+tests by Lipschitz tests on the compact state space then gives \eqref{eq:6.4}.
+\end{proof}
+
+\begin{remark}[The feedback parameter is auxiliary]
+The empirical plans in Theorem~\ref{thm:reconstruct} depend only on the
+original samples.  Running the argument with two admissible feedback
+parameters therefore gives two weak limits of the same sequence, which
+must coincide.  Thus \(\kappa_\infty\) is independent of \(\lambda\).
+\end{remark}
+
+\subsection{Conclusion of the selection proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main-prove}]
+Theorem~\ref{thm:EFE2} supplies the unique source-Palm horizontal coupling.
+Theorem~\ref{thm:reconstruct} combines physical block identification and
+vertical concentration to give the asserted convergence.
+The two marginals of \(\kappa_\infty\)
+are uniform because the finite empirical mark marginals are the laws
+of all \(U_i\)'s and all \(V_j\)'s, respectively.
+\end{proof}
+\begin{corollary}[Deterministic projective mark]
+\label{cor:deterministic-mark-prove}
+The original full empirical mark coupling
+\(\kappa_n=n^{-1}\sum_i\delta_{(U_i,V_{\sigma_n(i)})}\)
+converges weakly in probability to \(\kappa_\infty\).
+\end{corollary}
+
+\begin{proof}
+Apply Theorem~\ref{thm:main-prove} to tests of the form
+\(F(t,u,s,v)=f(u,v)\), where \(f\) is continuous on \([0,1]^2\).
+\end{proof}
+
+\begin{thebibliography}{9}
+
+\bibitem{AmbrosioPratelli}
+L.~Ambrosio and A.~Pratelli.
+Existence and stability results in the \(L^1\) theory of optimal transportation.
+In \emph{Optimal Transportation and Applications},
+Lecture Notes in Mathematics, vol.~1813, pp.~123--160.
+Springer, 2003.
+\href{https://doi.org/10.1007/978-3-540-44857-0_5}{doi:10.1007/978-3-540-44857-0\_5}.
+
+\bibitem{delBarrioEtAl2025}
+E.~del Barrio, A.~Gonz\'alez-Sanz, J.-M.~Loubes, and
+D.~Rodr\'iguez-V\'itores.
+Distributional limit theory for optimal transport.
+Preprint, 2025, revised 2026.
+\href{https://arxiv.org/abs/2505.19104}{arXiv:2505.19104}.
+
+\bibitem{Gwozdz}
+M.~Gw\'{o}\'zd\'z.
+Instability of the ray-monotone selector for \(W_1\)-optimal transport.
+Preprint, 2026.
+\href{https://arxiv.org/abs/2604.15474}{arXiv:2604.15474}.
+
+\bibitem{HolroydJansonWastlund}
+A.~E.~Holroyd, S.~Janson, and J.~W\"astlund.
+Minimal matchings of point processes.
+\emph{Probability Theory and Related Fields} \textbf{184} (2022), 571--611.
+\href{https://doi.org/10.1007/s00440-022-01151-y}{doi:10.1007/s00440-022-01151-y}.
+
+\bibitem{Huesmann}
+M.~Huesmann.
+Optimal transport between random measures.
+\emph{Annales de l'Institut Henri Poincar\'e, Probabilit\'es et Statistiques}
+\textbf{52} (2016), 196--232.
+\href{https://doi.org/10.1214/14-AIHP634}{doi:10.1214/14-AIHP634}.
+
+\end{thebibliography}
+\end{document}
