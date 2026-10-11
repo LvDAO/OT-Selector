@@ -17,7 +17,7 @@ distance, with a fixed ordering to resolve ties, and define the empirical
 transport plan by
 
 $$
-\sigma_n\in\operatorname*{arg\,min}_{\sigma}
+\sigma_n\in\mathrm{arg\,min}_{\sigma}
 \sum_{i=1}^n\lVert X_i-Y_{\sigma(i)}\rVert_2,
 \qquad
 \pi_n=\frac1n\sum_{i=1}^n\delta_{(X_i,Y_{\sigma_n(i)})}.
@@ -28,11 +28,11 @@ $[0,1]$ distributions such that**
 
 $$
 \pi_n\xrightarrow{\mathbb P}
-\operatorname{Law}\bigl((U,T),(2+V,T)\bigr)
+\mathrm{Law}\bigl((U,T),(2+V,T)\bigr)
 \quad\text{in the weak topology},
 $$
 
-where $(U,V)\sim\kappa_\infty$ and $T\sim\operatorname{Unif}[0,1]$ are
+where $(U,V)\sim\kappa_\infty$ and $T\sim\mathrm{Unif}[0,1]$ are
 independent. Thus independent sampling selects a single deterministic
 optimal plan. This plan preserves height and has the same joint distribution
 of paired horizontal coordinates at every height.
